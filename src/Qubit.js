@@ -33,9 +33,6 @@ const GATE_DICT = {
 class Qubit extends Vector {
     quantumState;
 
-    // constructor(horizontalComponent, verticalComponent) {
-    //     super(horizontalComponent, verticalComponent);
-    // }
 
     applyGate(gate) {
         console.log("applying gate: " + gate);
@@ -43,7 +40,6 @@ class Qubit extends Vector {
         this.horizontalComponent = result.components[0];
         this.verticalComponent = result.components[1];
         this.components = result.components;
-        // this = result;
     }
 
     getProbability() {

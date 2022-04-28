@@ -19,9 +19,6 @@ function App() {
 
   const fireShots = (e) => {
     e.preventDefault();
-    console.log("fire shots");
-    console.log(e.target.length);
-    console.log(e.target[0].value);
     let numShots = e.target[0].value;
     let zeroCount = 0;
     let oneCount = 0;
@@ -32,8 +29,6 @@ function App() {
         oneCount++;
       }
     }
-    console.log(zeroCount);
-    console.log(oneCount);
     setZeroCount(zeroCount);
     setOneCount(oneCount);
   };
@@ -92,19 +87,8 @@ function App() {
       currIndex++;
     }
     setQubit(qubits[0]);
-    console.log(qubits[0].toString());
-
-    console.log(qubits[0].getProbability().toString());
-    console.log((new ComplexNumber(1,0).sub(qubits[0].getProbability()).toString()));
     setQuantumState(qubits[0].toString());
 
-    // console.log(qubits[0].toString());
-    // qubits[0].applyGate("H");
-    // console.log(qubits[0].toString());
-    // qubits[0].applyGate("S");
-    // console.log(qubits[0].toString());
-    // console.log(qubits[0].horizontalComponent.getMagnitude().toString());
-    // console.log(qubits[0].verticalComponent.getMagnitude().toString());
   };
 
   return (

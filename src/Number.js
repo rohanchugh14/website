@@ -17,16 +17,12 @@ class ComplexNumber {
         let newRealNum = this.realNum + num.realNum;
         let newComplexCoefficient = this.complexCoefficient + num.complexCoefficient;
         return new ComplexNumber(newRealNum, newComplexCoefficient);
-        // this.realNum += num.realNum;
-        // this.complexCoefficient += num.complexCoefficient;
     }
 
     sub(num) {
         let newRealNum = this.realNum - num.realNum;
         let newComplexCoefficient = this.complexCoefficient - num.complexCoefficient;
         return new ComplexNumber(newRealNum, newComplexCoefficient);
-        // this.realNum -= num.realNum;
-        // this.complexCoefficient -= num.complexCoefficient;
     }
 
     mul(num) {
@@ -35,9 +31,6 @@ class ComplexNumber {
         let newRealNum = this.realNum * num.realNum + this.complexCoefficient * num.complexCoefficient * -1 ;
         let newComplexCoefficient = (this.realNum* num.complexCoefficient) + (this.complexCoefficient * num.realNum);
         return new ComplexNumber(newRealNum, newComplexCoefficient);
-
-        // this.realNum = newRealNum;
-        // this.complexCoefficient = newComplexCoefficient;
     }
 
     complexConjugate() {
