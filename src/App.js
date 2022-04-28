@@ -1,24 +1,166 @@
 // import React from 'react';
-import './App.css';
+import "./App.css";
+import { parseNum, getGate, randomEvent } from "./Utility";
+import { Card } from "@themesberg/react-bootstrap";
+import React, { useState } from "react";
+import Qubit from "./Qubit";
+import ComplexNumber from "./Number";
 
-import Search from './Search';
-import {Dropdown, Option} from "./Dropdown";
 function App() {
+  const fr = new FileReader();
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [valid, setValid] = useState(true);
+  const [quantumState, setQuantumState] = useState("");
+  const [qubit, setQubit] = useState(null);
+  const [zeroCount, setZeroCount] = useState(-1);
+  const [oneCount, setOneCount] = useState(-1);
+  const VALID_GATES = ["h", "x", "y", "z", "i", "p0", "p1", "s", "sdg"];
+
+  const fireShots = (e) => {
+    e.preventDefault();
+    console.log("fire shots");
+    console.log(e.target.length);
+    console.log(e.target[0].value);
+    let numShots = e.target[0].value;
+    let zeroCount = 0;
+    let oneCount = 0;
+    for(let i = 0; i < numShots; i++) {
+      if(randomEvent(qubit.getProbability().realNum)) {
+        zeroCount++;
+      } else {
+        oneCount++;
+      }
+    }
+    console.log(zeroCount);
+    console.log(oneCount);
+    setZeroCount(zeroCount);
+    setOneCount(oneCount);
+  };
+  const onChange = (e) => {
+    //only set the file if the file is not null
+    if (e.target.files[0]) {
+      const rawFile = e.target.files[0];
+      const name = rawFile.name;
+      setFileName(name);
+      const extension = name.split(".").pop().toLowerCase();
+      if (extension === "qasm") {
+        setValid(true);
+        //make sure file extension is QASM
+        fr.readAsText(e.target.files[0]);
+        fr.onloadend = () => {
+          //separate the file into each line, removing any blank lines
+          const lines = fr.result.split("\n").filter((line) => line.length > 0);
+          if (lines[0] !== "OPENQASM 2.0;") {
+            setValid(false);
+            return;
+          }
+          setZeroCount(-1);
+          setOneCount(-1);
+          setFile(lines);
+          initialize(lines);
+        };
+      } else {
+        setValid(false);
+      }
+    } else {
+      setFile(null);
+    }
+  };
+
+  const initialize = (lines) => {
+    let currIndex = 0;
+
+    while (!lines[currIndex].includes("qreg")) {
+      currIndex++;
+    }
+    let numQubits = parseNum(lines[currIndex]);
+    currIndex++;
+    let qubits = [];
+    for (let i = 0; i < numQubits; i++) {
+      let horizontalComponent = new ComplexNumber(1, 0);
+      let verticalComponent = new ComplexNumber(0, 0);
+      let qubit = new Qubit(horizontalComponent, verticalComponent);
+      qubits.push(qubit);
+    }
+
+    while (lines[currIndex]) {
+      let gate = getGate(lines[currIndex]);
+      if (VALID_GATES.includes(gate)) {
+        qubits[0].applyGate(getGate(lines[currIndex]));
+      }
+      currIndex++;
+    }
+    setQubit(qubits[0]);
+    console.log(qubits[0].toString());
+
+    console.log(qubits[0].getProbability().toString());
+    console.log((new ComplexNumber(1,0).sub(qubits[0].getProbability()).toString()));
+    setQuantumState(qubits[0].toString());
+
+    // console.log(qubits[0].toString());
+    // qubits[0].applyGate("H");
+    // console.log(qubits[0].toString());
+    // qubits[0].applyGate("S");
+    // console.log(qubits[0].toString());
+    // console.log(qubits[0].horizontalComponent.getMagnitude().toString());
+    // console.log(qubits[0].verticalComponent.getMagnitude().toString());
+  };
+
   return (
     <div>
-      <h1>Hello World</h1>
-      <Search />
-      <Dropdown 
-        formLabel="Choose a service"
-        buttonText="Send form"
-        action="/"
-        >
-          <Option selected value="Click to see options"></Option>
-          <Option value="1" text="Option 1"></Option>
-          <Option value="2" text="Option 2"></Option>
-          <Option value="3" text="Option 3"></Option>
+      <Card border="light" className="bg-white shadow-sm mb-4">
+        <Card.Body>
+          <div className="center-text mb-2">
+            <h1>Quantum Simulator</h1>
 
-      </Dropdown>
+            {
+              //create a file input that sets file to be the file that was uploaded
+            }
+            <input type="file" onChange={onChange} />
+            <br />
+          </div>
+          {!valid ? (
+            <span className="error">
+              Only QASM files are accepted. Please try again.
+            </span>
+          ) : null}
+          {valid && file ? (
+            <div>
+              <div className="center-text mb-1">
+                <h2>Quantum State: {quantumState}</h2>
+              </div>
+              <div className="center-text mb-2">
+                <br />
+                <h2>Enter number of shots to fire: </h2>
+                <form onSubmit={fireShots}>
+                  <input type="number" min="1" />
+                  <button type="submit">Fire</button>
+                </form>) 
+                {zeroCount === -1 ? (<></>)
+                : (
+                  <div>
+                    <h3>Zero Count: {zeroCount}</h3>
+                    <h3>One Count: {oneCount}</h3>
+                  </div>
+                )}
+              </div>
+
+              <h3>{fileName + ":"}</h3>
+              <code className="left-align-text" id="code-snippet">
+                {file.map((element, index) => (
+                  <React.Fragment key={index}>
+                    <br />
+                    {element}
+                  </React.Fragment>
+                ))}
+              </code>
+            </div>
+          ) : (
+            <></>
+          )}
+        </Card.Body>
+      </Card>
     </div>
   );
 }
