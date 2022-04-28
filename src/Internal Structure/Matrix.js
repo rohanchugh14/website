@@ -1,5 +1,5 @@
 import Vector from "./Vector";
-import ComplexNumber from "./Number";
+import ComplexNumber from "./ComplexNumber";
 //each matrix is 2x2, represented internally as 2 column vectors
 class Matrix extends Vector {
     //col vectors of matrix

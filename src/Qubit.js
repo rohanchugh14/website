@@ -1,7 +1,7 @@
 
-import Vector from "./Vector";
-import Matrix from "./Matrix";
-import ComplexNumber from "./Number";
+import Vector from "./Internal Structure/Vector";
+import Matrix from "./Internal Structure/Matrix";
+import ComplexNumber from "./Internal Structure/ComplexNumber";
 //class constants
 
 //gates

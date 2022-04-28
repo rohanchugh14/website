@@ -1,10 +1,9 @@
 // import React from 'react';
-import "./App.css";
+import "./CSS/App.css";
 import { parseNum, getGate, randomEvent } from "./Utility";
 import { Card } from "@themesberg/react-bootstrap";
 import React, { useState } from "react";
 import Qubit from "./Qubit";
-import ComplexNumber from "./Number";
 
 function App() {
   const fr = new FileReader();
@@ -73,8 +72,6 @@ function App() {
     currIndex++;
     let qubits = [];
     for (let i = 0; i < numQubits; i++) {
-      let horizontalComponent = new ComplexNumber(1, 0);
-      let verticalComponent = new ComplexNumber(0, 0);
       let qubit = new Qubit();
       qubits.push(qubit);
     }
