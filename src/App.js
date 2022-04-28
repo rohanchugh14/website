@@ -75,7 +75,7 @@ function App() {
     for (let i = 0; i < numQubits; i++) {
       let horizontalComponent = new ComplexNumber(1, 0);
       let verticalComponent = new ComplexNumber(0, 0);
-      let qubit = new Qubit(horizontalComponent, verticalComponent);
+      let qubit = new Qubit();
       qubits.push(qubit);
     }
 

@@ -31,8 +31,10 @@ const GATE_DICT = {
  * adding a few useful methods. Mostly used for display
  */
 class Qubit extends Vector {
-    quantumState;
-
+    //creates a new Qubit, defaulting to |0> or the horizontal state.
+    constructor() {
+        super(new ComplexNumber(1,0), new ComplexNumber(0,0));
+    }
 
     applyGate(gate) {
         console.log("applying gate: " + gate);
