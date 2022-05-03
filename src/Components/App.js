@@ -83,8 +83,6 @@ function App() {
               continue;
             }
             let index = getQubitNum(lines[currIndex]);
-            console.log(lines[currIndex]);
-            console.log(index);
             qubits[index].applyGate(lines[currIndex]);
             currIndex++;
         }
