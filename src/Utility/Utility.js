@@ -18,6 +18,10 @@ export const randomEvent = (probability) => {
     return Math.random() < probability;
 };
 
+export const getQubitNum = (line) => {
+    return parseInt(line.substring(line.indexOf("[") + 1));
+}
+
 export const getUnitaryParameters = (line) => {
     let parameters = line.substring(2, line.indexOf("q") - 2).split(",");
     parameters = parameters.map((elem) => {

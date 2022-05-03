@@ -1,6 +1,6 @@
 // import React from 'react';
 import "../CSS/App.css";
-import { parseNum, randomEvent } from "../Utility/Utility";
+import { parseNum, randomEvent, getQubitNum } from "../Utility/Utility";
 import { Card } from "@themesberg/react-bootstrap";
 import React, { useState } from "react";
 import Qubit from "../Utility/Qubit";
@@ -78,7 +78,14 @@ function App() {
         }
 
         while (lines[currIndex]) {
-            qubits[0].applyGate(lines[currIndex]);
+            if(lines[currIndex].includes("creg")) { 
+              currIndex++;
+              continue;
+            }
+            let index = getQubitNum(lines[currIndex]);
+            console.log(lines[currIndex]);
+            console.log(index);
+            qubits[index].applyGate(lines[currIndex]);
             currIndex++;
         }
         setQubit(qubits[0]);
