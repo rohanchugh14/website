@@ -18,7 +18,9 @@ class Matrix extends Vector {
     multiply(vector) {
         let result = new Vector(new ComplexNumber(0, 0), new ComplexNumber(0, 0));
         for(let r = 0; r < 2; r++) {
-            result.components[r] = this.leftCol.components[r].mul(vector.horizontalComponent).add(this.rightCol.components[r].mul(vector.verticalComponent));
+            result.components[r] = this.leftCol.components[r]
+            .mul(vector.horizontalComponent)
+            .add(this.rightCol.components[r].mul(vector.verticalComponent));
         }   
         return result;
     }
