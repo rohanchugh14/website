@@ -78,7 +78,7 @@ function App() {
         }
 
         while (lines[currIndex]) {
-            if(lines[currIndex].includes("creg") || lines[currIndex].includes("measure") ) { 
+            if(lines[currIndex].includes("creg") || lines[currIndex].includes("measure") ||lines[currIndex].includes("barrier") ) { 
               currIndex++;
               continue;
             }
