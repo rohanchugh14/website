@@ -15,6 +15,8 @@ const P_0 = new Matrix(new Vector(new ComplexNumber(1, 0), new ComplexNumber(0, 
 const P_1 = new Matrix(new Vector(new ComplexNumber(0, 0), new ComplexNumber(0, 0)), new Vector(new ComplexNumber(0, 0), new ComplexNumber(1, 0)));
 const S = new Matrix(new Vector(new ComplexNumber(1, 0), new ComplexNumber(0, 0)), new Vector(new ComplexNumber(0, 0), new ComplexNumber(0, 1)));
 const S_DAG = new Matrix(new Vector(new ComplexNumber(1, 0), new ComplexNumber(0, 0)), new Vector(new ComplexNumber(0, 0), new ComplexNumber(0, -1)));
+const T = new Matrix(new Vector(new ComplexNumber(1, 0), new ComplexNumber(0, 0)), new Vector(new ComplexNumber(0, 0), new ComplexNumber(Math.cos(Math.PI/4), Math.sin(Math.PI/4))));
+const T_DAG = new Matrix(new Vector(new ComplexNumber(1, 0), new ComplexNumber(0, 0)), new Vector(new ComplexNumber(0, 0), new ComplexNumber(Math.cos(-Math.PI/4), Math.sin(-Math.PI/4))));
 const GATE_DICT = {
     "H": H,
     "X": X,
@@ -24,7 +26,9 @@ const GATE_DICT = {
     "P_0": P_0,
     "P_1": P_1,
     "S": S,
-    "SDG": S_DAG
+    "SDG": S_DAG,
+    "T": T,
+    "TDG": T_DAG
 }
 /**
  * A Qubit class that is built on top of the vector class.
@@ -66,7 +70,9 @@ class Qubit extends Vector {
         let leftHorizontal = cosTheta;
         let leftVertical = this.getExponentToI(phi).mul(sinTheta);
         //multiply by negative 1 at the end
-        let rightHorizontal = this.getExponentToI(lambda).mul(sinTheta).mul(new ComplexNumber(-1, 0));
+        let rightHorizontal = this.getExponentToI(lambda).mul(sinTheta)
+        .mul(new ComplexNumber(-1, 0));
+        
         let rightVertical = this.getExponentToI(phi+lambda).mul(cosTheta);
 
         let leftVector = new Vector(leftHorizontal, leftVertical);

@@ -12,7 +12,8 @@ class ComplexNumber {
     toString() {
         //takes absolute value of complex coefficient to ensure that string output will be
         // ... - complexCoefficient if negative or 0 + complexCoefficient if positive
-        return (String(this.realNum) + (this.complexCoefficient < 0 ? " - " : " + ") + String(Math.abs(this.complexCoefficient)) + "i");
+        return (String(this.realNum) + (this.complexCoefficient < 0 ? " - " : " + ") + 
+        String(Math.abs(this.complexCoefficient)) + "i");
     }
 
     add(num) {
@@ -30,8 +31,12 @@ class ComplexNumber {
     mul(num) {
         
         
-        let newRealNum = this.realNum * num.realNum + this.complexCoefficient * num.complexCoefficient * -1 ;
-        let newComplexCoefficient = (this.realNum* num.complexCoefficient) + (this.complexCoefficient * num.realNum);
+        let newRealNum = this.realNum * num.realNum + this.complexCoefficient * 
+        num.complexCoefficient * -1 ;
+
+        let newComplexCoefficient = (this.realNum* num.complexCoefficient) + 
+        (this.complexCoefficient * num.realNum);
+        
         return new ComplexNumber(newRealNum, newComplexCoefficient);
     }
 
