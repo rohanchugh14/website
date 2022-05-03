@@ -22,6 +22,10 @@ class Matrix extends Vector {
         }   
         return result;
     }
+    
+    toString() {
+        return "[" + this.leftCol.toString() + ", " + this.rightCol.toString() + "]";
+    }
 
 
 }

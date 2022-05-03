@@ -5,12 +5,14 @@ class ComplexNumber {
     constructor(realNum, complexCoefficient) {
         //rounds to at most 3 decimals whenever number is created
         //avoids rounding errors
-        this.realNum = +(Math.round(realNum + "e+3") + "e-3");
-        this.complexCoefficient = +(Math.round(complexCoefficient + "e+3") + "e-3");
+        this.realNum = parseFloat(realNum.toFixed(3));
+        this.complexCoefficient = parseFloat(complexCoefficient.toFixed(3));
     }
 
     toString() {
-        return (String(this.realNum) + " + " + String(this.complexCoefficient) + "i");
+        //takes absolute value of complex coefficient to ensure that string output will be
+        // ... - complexCoefficient if negative or 0 + complexCoefficient if positive
+        return (String(this.realNum) + (this.complexCoefficient < 0 ? " - " : " + ") + String(Math.abs(this.complexCoefficient)) + "i");
     }
 
     add(num) {
@@ -39,8 +41,7 @@ class ComplexNumber {
 
     getMagnitude() {
         let complexConjugate = this.complexConjugate();
-        complexConjugate = complexConjugate.mul(this);
-        return complexConjugate;
+        return complexConjugate.mul(this);
     }
 
     //dividing complex numbers is not really necessary within the scope of this project,

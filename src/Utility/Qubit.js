@@ -1,7 +1,8 @@
 
-import Vector from "./Internal Structure/Vector";
-import Matrix from "./Internal Structure/Matrix";
-import ComplexNumber from "./Internal Structure/ComplexNumber";
+import Vector from "../Internal Structure/Vector";
+import Matrix from "../Internal Structure/Matrix";
+import ComplexNumber from "../Internal Structure/ComplexNumber";
+import { getGate, getUnitaryParameters } from "./Utility";
 //class constants
 
 //gates
@@ -36,9 +37,17 @@ class Qubit extends Vector {
         super(new ComplexNumber(1,0), new ComplexNumber(0,0));
     }
 
-    applyGate(gate) {
-        console.log("applying gate: " + gate);
-        let result = GATE_DICT[gate.toUpperCase()].multiply(this);
+    applyGate(line) {
+        let gate = getGate(line);
+        if (gate == null) return;
+        let matrix;
+        if(gate === "U") {
+            let params = getUnitaryParameters(line);
+            matrix = this.createUnitary(params[0], params[1], params[2]);
+        } else {
+            matrix = GATE_DICT[gate];
+        }
+        let result = matrix.multiply(this);
         this.horizontalComponent = result.components[0];
         this.verticalComponent = result.components[1];
         this.components = result.components;
@@ -47,6 +56,30 @@ class Qubit extends Vector {
     getProbability() {
         let probability = new Vector(this.horizontalComponent.getMagnitude(), this.verticalComponent.getMagnitude());
         return probability.horizontalComponent;
+    }
+
+    createUnitary(theta, phi, lambda) {
+        //divide theta by 2 since all parameters use theta/2
+        let cosTheta = new ComplexNumber(Math.cos(theta / 2.0), 0);
+        let sinTheta = new ComplexNumber(Math.sin(theta / 2.0), 0);
+
+        let leftHorizontal = cosTheta;
+        let leftVertical = this.getExponentToI(phi).mul(sinTheta);
+        //multiply by negative 1 at the end
+        let rightHorizontal = this.getExponentToI(lambda).mul(sinTheta).mul(new ComplexNumber(-1, 0));
+        let rightVertical = this.getExponentToI(phi+lambda).mul(cosTheta);
+
+        let leftVector = new Vector(leftHorizontal, leftVertical);
+        let rightVector = new Vector(rightHorizontal, rightVertical);
+
+        return new Matrix(leftVector, rightVector);
+
+    }
+
+    getExponentToI(angle) {
+        let realComponent = Math.cos(angle);
+        let imaginaryComponent = Math.sin(angle);
+        return new ComplexNumber(realComponent, imaginaryComponent);
     }
 }
 
