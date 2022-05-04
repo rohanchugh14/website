@@ -4,6 +4,7 @@ import { parseNum, randomEvent, getQubitNum } from "../Utility/Utility";
 import { Card } from "@themesberg/react-bootstrap";
 import React, { useState } from "react";
 import Qubit from "../Utility/Qubit";
+import Latex from "react-latex";
 
 function App() {
     const fr = new FileReader();
@@ -107,7 +108,9 @@ function App() {
         <Card.Body>
           <div className="center-text mb-2">
             <h1>Quantum Simulator</h1>
-
+            <h3>
+                <Latex displayMode={true}>$$| a_k \rangle $$</Latex>
+            </h3>
             {
               //create a file input that sets file to be the file that was uploaded
             }
