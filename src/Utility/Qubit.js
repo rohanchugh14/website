@@ -87,6 +87,21 @@ class Qubit extends Vector {
         let imaginaryComponent = Math.sin(angle);
         return new ComplexNumber(realComponent, imaginaryComponent);
     }
+
+    static getTensorProduct(qubits) {
+        let result = qubits[0].components;
+        for(let i = 1; i < qubits.length; i++) {
+            let tempResult = [];
+            let qubitToMultiply = qubits[i].components;
+            for(let scalarIndex = 0; scalarIndex < 2; scalarIndex++) {
+                for(let resIndex = 0; resIndex < result.length; resIndex++) {
+                    tempResult.push(qubitToMultiply[scalarIndex].mul(result[resIndex]));
+                }
+            }
+            result = tempResult;
+        }
+        return result;
+    }
 }
 
 export default Qubit;

@@ -78,16 +78,27 @@ function App() {
         }
 
         while (lines[currIndex]) {
-            if(lines[currIndex].includes("creg") || lines[currIndex].includes("measure") ||lines[currIndex].includes("barrier") ) { 
-              currIndex++;
-              continue;
+            if (
+                lines[currIndex].includes("creg") ||
+                lines[currIndex].includes("measure") ||
+                lines[currIndex].includes("barrier")
+            ) {
+                currIndex++;
+                continue;
             }
             let index = getQubitNum(lines[currIndex]);
+            console.log("currLine", lines[currIndex]);
+            console.log("index", index);
             qubits[index].applyGate(lines[currIndex]);
             currIndex++;
         }
-        setQubit(qubits[0]);
-        setQuantumState(qubits[0].toString());
+        console.log("numQubits", numQubits);
+        if (numQubits > 1) {
+            let tensorProduct = Qubit.getTensorProduct(qubits);
+            console.log(tensorProduct);
+        }
+        setQubit(qubits[1]);
+        setQuantumState(qubits[1].toString());
     };
 
   return (
@@ -132,10 +143,10 @@ function App() {
 
               <h3>{fileName + ":"}</h3>
               <code className="left-align-text" id="code-snippet">
-                {file.map((element, index) => (
+                {file.map((line, index) => (
                   <React.Fragment key={index}>
                     <br />
-                    {element}
+                    {line}
                   </React.Fragment>
                 ))}
               </code>
