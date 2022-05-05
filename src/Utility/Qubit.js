@@ -57,9 +57,23 @@ class Qubit extends Vector {
         this.components = result.components;
     }
 
+    //returns the probabilities of 0 and 1 for this qubit
     getProbability() {
-        let probability = new Vector(this.horizontalComponent.getMagnitude(), this.verticalComponent.getMagnitude());
-        return probability.horizontalComponent;
+        let probabilities = [];
+        probabilities.push(this.horizontalComponent.getMagnitude());
+        probabilities.push(this.verticalComponent.getMagnitude());
+        return probabilities;
+    }
+
+    getAmplitude() {
+        return this.components;
+    }
+
+    //utility method for getting the probabilities for each state of a tensor product
+    static getProbabilities(tensorProduct) {
+        let probabilities = [];
+        tensorProduct.forEach(state => probabilities.push(state.getMagnitude()));
+        return probabilities;
     }
 
     createUnitary(theta, phi, lambda) {

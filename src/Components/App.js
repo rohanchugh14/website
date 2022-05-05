@@ -1,10 +1,15 @@
 // import React from 'react';
 import "../CSS/App.css";
-import { parseNum, randomEvent, getQubitNum } from "../Utility/Utility";
+import {
+    parseNum,
+    randomEvent,
+    getQubitNum,
+    pickRandomEvent,
+} from "../Utility/Utility";
 import { Card } from "@themesberg/react-bootstrap";
 import React, { useState } from "react";
 import Qubit from "../Utility/Qubit";
-import Latex from "react-latex";
+import Latex from "react-latex-next";
 
 function App() {
     const fr = new FileReader();
@@ -12,24 +17,28 @@ function App() {
     const [fileName, setFileName] = useState("");
     const [valid, setValid] = useState(true);
     const [quantumState, setQuantumState] = useState("");
-    const [qubit, setQubit] = useState(null);
-    const [zeroCount, setZeroCount] = useState(-1);
-    const [oneCount, setOneCount] = useState(-1);
+    const [tensorProduct, setTensorProduct] = useState([]);
+    const [counts, setCounts] = useState([]);
+    const [numQubits, setNumQubits] = useState(0);
+    const [latexStrings, setLatexStrings] = useState([]);
+    const [probs, setProbs] = useState([]);
 
-    const fireShots = (e) => {
+    const fireShots = (e, nQubits, probabilities) => {
         e.preventDefault();
         let numShots = e.target[0].value;
-        let zeroCount = 0;
-        let oneCount = 0;
+
+        let counts = new Array(probabilities.length).fill(0);
         for (let i = 0; i < numShots; i++) {
-            if (randomEvent(qubit.getProbability().realNum)) {
-                zeroCount++;
-            } else {
-                oneCount++;
-            }
+            let index = pickRandomEvent(probabilities);
+            counts[index]++;
         }
-        setZeroCount(zeroCount);
-        setOneCount(oneCount);
+        let latStrings = [];
+        probabilities.forEach((prob, state) => {
+            if (prob > 0)
+                latStrings.push("$|" + state.toString(2).padStart(nQubits, "0") +
+                        "\\rangle :" + counts[state].toString() + "$");
+        });
+        setLatexStrings(latStrings);
     };
     const onChange = (e) => {
         //only set the file if the file is not null
@@ -51,8 +60,6 @@ function App() {
                         setValid(false);
                         return;
                     }
-                    setZeroCount(-1);
-                    setOneCount(-1);
                     setFile(lines);
                     initialize(lines);
                 };
@@ -70,14 +77,15 @@ function App() {
         while (!lines[currIndex].includes("qreg")) {
             currIndex++;
         }
-        let numQubits = parseNum(lines[currIndex]);
+        let nQubits = parseNum(lines[currIndex]);
+        setNumQubits(nQubits);
         currIndex++;
         let qubits = [];
-        for (let i = 0; i < numQubits; i++) {
+        for (let i = 0; i < nQubits; i++) {
             let qubit = new Qubit();
             qubits.push(qubit);
         }
-
+        console.log("all 0 qubits", qubits);
         while (lines[currIndex]) {
             if (
                 lines[currIndex].includes("creg") ||
@@ -93,74 +101,121 @@ function App() {
             qubits[index].applyGate(lines[currIndex]);
             currIndex++;
         }
-        console.log("numQubits", numQubits);
-        if (numQubits > 1) {
-            let tensorProduct = Qubit.getTensorProduct(qubits);
-            console.log(tensorProduct);
+        console.log("numQubits", nQubits);
+        let amplitudes = [];
+        let probabilities = [];
+        if (nQubits > 1) {
+            console.log(qubits);
+            amplitudes = Qubit.getTensorProduct(qubits);
+            let qStates = [];
+
+            console.log(amplitudes);
+            probabilities = Qubit.getProbabilities(amplitudes);
+            console.log(probabilities);
+            setProbs(probabilities);
+        } else {
+            amplitudes = qubits[0].getAmplitude();
+            probabilities = qubits[0].getProbability();
+            setProbs(probabilities);
         }
-        setQubit(qubits[1]);
-        setQuantumState(qubits[1].toString());
+        let quantState = "";
+        console.log("amplitudes", amplitudes);
+        for(let i = 0; i < amplitudes.length; i++) {
+          if(probabilities[i] > 0) {
+            quantState += "$" + (i != 0 && (amplitudes[i].realComponent > 0 || amplitudes[i].imaginaryComponent > 0) ? "+$ $" : "") + amplitudes[i] + "|" + i.toString(2).padStart(nQubits, "0") + "\\rangle$ ";
+
+          }
+        }
+        setQuantumState(quantState);
+
     };
 
-  return (
-    <div>
-      <Card border="light" className="bg-white shadow-sm mb-4">
-        <Card.Body>
-          <div className="center-text mb-2">
-            <h1>Quantum Simulator</h1>
-            <h3>
-                <Latex displayMode={true}>$$| a_k \rangle $$</Latex>
-            </h3>
-            {
-              //create a file input that sets file to be the file that was uploaded
+    const prepareQubits = (qubits, lines, currIndex) => {
+        while (lines[currIndex]) {
+            if (
+                lines[currIndex].includes("creg") ||
+                lines[currIndex].includes("measure") ||
+                lines[currIndex].includes("barrier")
+            ) {
+                currIndex++;
+                continue;
             }
-            <input type="file" onChange={onChange} />
-            <br />
-          </div>
-          {!valid ? (
-            <span className="error">
-              Only QASM files are accepted. Please try again.
-            </span>
-          ) : null}
-          {valid && file ? (
-            <div>
-              <div className="center-text mb-1">
-                <h2>Quantum State: {quantumState}</h2>
-              </div>
-              <div className="center-text mb-2">
-                <br />
-                <h2>Enter number of shots to fire: </h2>
-                <form onSubmit={fireShots}>
-                  <input type="number" min="1" />
-                  <button type="submit">Fire</button>
-                </form>
-                {zeroCount === -1 ? (
-                  <></>
-                ) : (
-                  <div>
-                    <h3>Zero Count: {zeroCount}</h3>
-                    <h3>One Count: {oneCount}</h3>
-                  </div>
-                )}
-              </div>
+            let index = getQubitNum(lines[currIndex]);
+            console.log("currLine", lines[currIndex]);
+            console.log("index", index);
+            qubits[index].applyGate(lines[currIndex]);
+            currIndex++;
+        }
+        return qubits;
+    };
 
-              <h3>{fileName + ":"}</h3>
-              <code className="left-align-text" id="code-snippet">
-                {file.map((line, index) => (
-                  <React.Fragment key={index}>
-                    <br />
-                    {line}
-                  </React.Fragment>
-                ))}
-              </code>
-            </div>
-          ) : (
-            <></>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
-  );
+    const measureQubits = (qubits, nQubits) => {
+        if (nQubits > 1) {
+            let tP = Qubit.getTensorProduct(qubits);
+            console.log(tP);
+            let probabilities = Qubit.getProbabilities(tP);
+        }
+    };
+    return (
+        <div>
+            <Card border="light" className="bg-white shadow-sm mb-4">
+                <Card.Body>
+                    <div className="center-text mb-2">
+                        <h1 className="mb-1">Quantum Simulator</h1>
+                        <input type="file" onChange={onChange} />
+                        <br />
+                    </div>
+                    {!valid ? (
+                        <span className="error">
+                            Only QASM files are accepted. Please try again.
+                        </span>
+                    ) : null}
+                    {valid && file ? (
+                        <div>
+                            <div className="center-text mb-1">
+                                <h2>Quantum State:</h2>
+                                <h3><Latex>{quantumState}</Latex></h3>
+                            </div>
+                            <div className="center-text mb-2">
+                                <br />
+                                <h2>Enter number of shots to fire: </h2>
+                                <form onSubmit={(e) => fireShots(e, numQubits, probs)}>
+                                    <input type="number" min="1" />
+                                    <button type="submit">Fire</button>
+                                </form>
+                                {latexStrings.length ?(
+                                    <div>
+                                        <h2>Counts:</h2>
+                                        {latexStrings ? (
+                                            latexStrings.map((el) => (
+                                                <h3>
+                                                    <Latex>{el}</Latex>
+                                                </h3>
+                                            ))
+                                        ) : (
+                                            <div>Not loaded</div>
+                                        )}
+                                    </div>
+                                ) : <>  </>}
+                            </div>
+
+                            <h3>{fileName + ":"}</h3>
+                            <code className="left-align-text" id="code-snippet">
+                                {file.map((line, index) => (
+                                    <React.Fragment key={index}>
+                                        <br />
+                                        {line}
+                                    </React.Fragment>
+                                ))}
+                            </code>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                </Card.Body>
+            </Card>
+        </div>
+    );
 }
 
 export default App;

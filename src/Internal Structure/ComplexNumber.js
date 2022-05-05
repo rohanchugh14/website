@@ -1,52 +1,66 @@
 //a class built to handle complex numbers
 class ComplexNumber {
-    realNum;
-    complexCoefficient;
-    constructor(realNum, complexCoefficient) {
+    realComponent;
+    imaginaryComponent;
+    constructor(realComponent, imaginaryComponent) {
         //rounds to at most 3 decimals whenever number is created
         //avoids rounding errors
-        this.realNum = parseFloat(realNum.toFixed(3));
-        this.complexCoefficient = parseFloat(complexCoefficient.toFixed(3));
+        this.realComponent = parseFloat(realComponent.toFixed(3));
+        this.imaginaryComponent = parseFloat(imaginaryComponent.toFixed(3));
     }
 
     toString() {
         //takes absolute value of complex coefficient to ensure that string output will be
-        // ... - complexCoefficient if negative or 0 + complexCoefficient if positive
-        return (String(this.realNum) + (this.complexCoefficient < 0 ? " - " : " + ") + 
-        String(Math.abs(this.complexCoefficient)) + "i");
+        // ... - imaginaryComponent if negative or 0 + imaginaryComponent if positive
+        let str = "";
+        if(this.realComponent !== 0) {
+            str += this.realComponent;
+            if(this.imaginaryComponent !== 0) {
+                str += this.imaginaryComponent > 0 ? " + " : " - ";
+                str += Math.abs(this.imaginaryComponent) + "i";
+            }
+        } else if(this.imaginaryComponent !== 0) {
+            str += this.imaginaryComponent + "i";
+        } else {
+            str = "0";
+        }
+        return str;
+
+        // return (String(this.realComponent) + (this.imaginaryComponent < 0 ? " - " : " + ") + 
+        // String(Math.abs(this.imaginaryComponent)) + "i");
     }
 
     add(num) {
-        let newRealNum = this.realNum + num.realNum;
-        let newComplexCoefficient = this.complexCoefficient + num.complexCoefficient;
-        return new ComplexNumber(newRealNum, newComplexCoefficient);
+        let newRealComponent = this.realComponent + num.realComponent;
+        let newImaginaryComponent = this.imaginaryComponent + num.imaginaryComponent;
+        return new ComplexNumber(newRealComponent, newImaginaryComponent);
     }
 
     sub(num) {
-        let newRealNum = this.realNum - num.realNum;
-        let newComplexCoefficient = this.complexCoefficient - num.complexCoefficient;
-        return new ComplexNumber(newRealNum, newComplexCoefficient);
+        let newRealComponent = this.realComponent - num.realComponent;
+        let newImaginaryComponent = this.imaginaryComponent - num.newImaginaryComponent;
+        return new ComplexNumber(newRealComponent, newImaginaryComponent);
     }
 
     mul(num) {
         
         
-        let newRealNum = this.realNum * num.realNum + this.complexCoefficient * 
-        num.complexCoefficient * -1 ;
+        let newRealComponent = this.realComponent * num.realComponent + this.imaginaryComponent * 
+        num.imaginaryComponent * -1 ;
 
-        let newComplexCoefficient = (this.realNum* num.complexCoefficient) + 
-        (this.complexCoefficient * num.realNum);
+        let newImaginaryComponent = (this.realComponent* num.imaginaryComponent) + 
+        (this.imaginaryComponent * num.realComponent);
         
-        return new ComplexNumber(newRealNum, newComplexCoefficient);
+        return new ComplexNumber(newRealComponent, newImaginaryComponent);
     }
 
-    complexConjugate() {
-        return new ComplexNumber(this.realNum, this.complexCoefficient * -1);
+    getComplexConjugate() {
+        return new ComplexNumber(this.realComponent, this.imaginaryComponent * -1);
     }
 
     getMagnitude() {
-        let complexConjugate = this.complexConjugate();
-        return complexConjugate.mul(this);
+        let complexConjugate = this.getComplexConjugate();
+        return complexConjugate.mul(this).realComponent;
     }
 
     //dividing complex numbers is not really necessary within the scope of this project,
