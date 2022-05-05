@@ -14,21 +14,6 @@ export const getGate = (line) => {
     return null;
 };
 
-export const randomEvent = (probability) => {
-    return Math.random() < probability;
-};
-export const pickRandomEvent = (probabilities) => {
-    let p = Math.random();
-    let cumulativeProbability = 0.0;
-    for (let state in probabilities) {
-        cumulativeProbability += probabilities[state];
-        if (p <= cumulativeProbability) {
-            return state;
-        }
-    }
-}
-
-
 export const getQubitNum = (line) => {
     return parseInt(line.substring(line.indexOf("[") + 1));
 }

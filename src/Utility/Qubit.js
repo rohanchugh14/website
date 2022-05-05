@@ -2,7 +2,7 @@
 import Vector from "../Internal Structure/Vector";
 import Matrix from "../Internal Structure/Matrix";
 import ComplexNumber from "../Internal Structure/ComplexNumber";
-import { getGate, getUnitaryParameters } from "./Utility";
+import { getGate, getUnitaryParameters } from "./Parser";
 //class constants
 
 //gates
@@ -115,6 +115,17 @@ class Qubit extends Vector {
             result = tempResult;
         }
         return result;
+    }
+
+    static pickRandomEvent = (probabilities) => {
+        let p = Math.random();
+        let cumulativeProbability = 0.0;
+        for (let state in probabilities) {
+            cumulativeProbability += probabilities[state];
+            if (p <= cumulativeProbability) {
+                return state;
+            }
+        }
     }
 }
 
