@@ -1,6 +1,13 @@
 const VALID_GATES = ["h", "x", "y", "z", "i", "p0", "p1", "s","u", "sdg"];
-export const parseNum = (line) => {
-    return parseInt(line.substring(7));
+export const getNumQubits = (lines) => {
+    let currIndex = 0;
+    
+    while (!lines[currIndex].includes("qreg")) {
+      currIndex++;
+    }
+    let numQubits = parseInt(lines[currIndex].substring(7));
+    currIndex++;
+    return [numQubits, currIndex];
 };
 
 export const getGate = (line) => {
