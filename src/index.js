@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './CSS/index.css';
-import Simulator from './Components/Simulator';
+// import Simulator from './Components/Simulator';
 import App from './Components/App';
 
 ReactDOM.render(

@@ -1,5 +1,5 @@
 import { Card } from "@themesberg/react-bootstrap";
-import React, { useState } from "react";
+import React from "react";
 import Navbar from "./Navbar";
 
 const App = () => {
