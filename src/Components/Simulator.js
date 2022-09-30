@@ -20,7 +20,7 @@ const Simulator = () => {
   
   
   return (
-    <div>
+    <div class="yellow-bg">
       <Card border="light" className="bg-white shadow-sm mb-4">
         <Card.Body>
           <div className="center-text mb-2">
