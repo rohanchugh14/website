@@ -1,7 +1,7 @@
 // import React from 'react';
-import "../CSS/App.css";
+import "../CSS/App.scss";
 import { onChange, fireShots } from "../Utility/Runner";
-import { Card } from "@themesberg/react-bootstrap";
+import { Card } from "react-bootstrap";
 import React, { useState } from "react";
 import Latex from "react-latex-next";
 

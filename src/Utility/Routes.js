@@ -1,5 +1,10 @@
+const CONSTANTS = {
+    megabusAPI: "https://us.megabus.com/journey-planner/api",
+    host: "http://localhost:3001",
+}
 const Routes = {
-    travelDates: "https://us.megabus.com/journey-planner/api/journeys/travel-dates?originCityId=320&destinationCityId=318",
+    journeys: CONSTANTS.megabusAPI + "/journeys",
+    proxy: CONSTANTS.host + "/proxy",
 };
 
-export default Routes;
+export { CONSTANTS, Routes };

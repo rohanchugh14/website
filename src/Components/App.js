@@ -1,13 +1,13 @@
 // import { Card } from "@themesberg/react-bootstrap";
 import React from "react";
-import Navbar from "./Navbar";
-import "../CSS/App.css";
+// import Navbar from "./Navbar";
+import "../CSS/App.scss";
 import Scraper from "./Scraper";
 
 const App = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
         <Scraper />
     </div>
   )
