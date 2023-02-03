@@ -66,13 +66,13 @@ const Scraper = () => {
                 <div><label htmlFor="destination">To</label></div>
                 <div><input type="search" id="destination" name="destination" placeholder="Enter a city" required /></div>
               </div>
-              <div className="field">
+              <div className="field date" key={dateValue}>
                 <div><label htmlFor="firstDate">{dateValue === "single" ? "Date" : "Start Date"}</label></div>
                 <div><input type="search" id="firstDate" name="firstDate" placeholder="Enter a city" required /></div>
               </div>
               {
                 dateValue === "range" ? (
-              <div id="optionalSecondDate" className="field">
+              <div id="optionalSecondDate" className="field date" >
                 <div><label htmlFor="secondDate">End Date</label></div>
                 <div><input type="search" id="secondDate" name="secondDate" placeholder="Enter a city" required /></div>
               </div>) : null
