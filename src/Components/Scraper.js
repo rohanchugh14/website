@@ -1,13 +1,31 @@
+// Imports
 import React from "react";
 import axios from "axios";
-import { useState } from "react";
-import "../CSS/App.scss";
+import cities from "../Utility/Cities";
 
+// Hooks
+import { useState } from "react";
 import { Routes } from "../Utility/Routes";
+
+// Components
+import DatePicker from "react-datepicker";
+import Select from "react-select";
+
+// CSS
+import "react-datepicker/dist/react-datepicker.css";
+import "../CSS/App.scss";
 
 const Scraper = () => {
   const [dateValue, setDateValue] = useState("single");
+  const [firstDate, setFirstDate] = useState(new Date());
+  const [secondDate, setSecondDate] = useState(new Date());
+  const options = [];
+  for (let city in cities) {
+    options.push({ value: cities[city], label: city });
+  }
   let params = new URLSearchParams();
+
+
   params.append("originId", "320");
   params.append("destinationId", "318");
   params.append("departureDate", "2023-02-03");
@@ -43,7 +61,10 @@ const Scraper = () => {
           <form>
             <div className="top-layer">
               <div className="label">Lets Go</div>
-              <div className="radio-buttons" onChange={(e) => setDateValue(e.target.value)}>
+              <div
+                className="radio-buttons"
+                onChange={(e) => setDateValue(e.target.value)}
+              >
                 <input
                   type="radio"
                   name="date-type"
@@ -59,27 +80,80 @@ const Scraper = () => {
             </div>
             <div className="main">
               <div className="field">
-                <div><label htmlFor="origin">From</label></div>
-                <div><input type="search" id="origin" name="origin" placeholder="Enter a city" required /></div>
+                <div>
+                  <label htmlFor="origin">From</label>
+                </div>
+                <div>
+                  
+                  <Select
+                  className="select"
+                  classNamePrefix={"select"}
+                  isSearchable
+                  options={options}
+                  required 
+                  unstyled
+                  />
+                  {/* <input
+                    type="search"
+                    id="origin"
+                    name="origin"
+                    placeholder="Enter a city"
+                    required
+                  /> */}
+                </div>
               </div>
               <div className="field">
-                <div><label htmlFor="destination">To</label></div>
-                <div><input type="search" id="destination" name="destination" placeholder="Enter a city" required /></div>
+                <div>
+                  <label htmlFor="destination">To</label>
+                </div>
+                <div>
+                <Select
+                  className="select"
+                  classNamePrefix={"select"}
+                  isSearchable
+                  noOptionsMessage={() => {return "Select a city to leave from first."}}
+                  options={[]} 
+                  required 
+                  unstyled/>
+                </div>
               </div>
               <div className="field date" key={dateValue}>
-                <div><label htmlFor="firstDate">{dateValue === "single" ? "Date" : "Start Date"}</label></div>
-                <div><input type="search" id="firstDate" name="firstDate" placeholder="Enter a city" required /></div>
+                <div>
+                  <label htmlFor="firstDate">
+                    {dateValue === "single" ? "Date" : "Start Date"}
+                  </label>
+                </div>
+                <div>
+                  <DatePicker
+                    selected={firstDate}
+                    onChange={(date) => setFirstDate(date)}
+                    id="firstDate"
+                    required
+                  />
+                </div>
               </div>
-              {
-                dateValue === "range" ? (
-              <div id="optionalSecondDate" className="field date" >
-                <div><label htmlFor="secondDate">End Date</label></div>
-                <div><input type="search" id="secondDate" name="secondDate" placeholder="Enter a city" required /></div>
-              </div>) : null
-              }
+              {dateValue === "range" ? (
+                <div id="optionalSecondDate" className="field date">
+                  <div>
+                    <label htmlFor="secondDate">End Date</label>
+                  </div>
+                  <div>
+                    <DatePicker
+                      selected={secondDate}
+                      onChange={(date) => setSecondDate(date)}
+                      id="secondDate"
+                      required
+                    />
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
             <div className="submit">
-              <button type="submit">Submit</button>
+              <button className="sub" type="submit">
+                Find My Tickets
+              </button>
             </div>
           </form>
         </div>

@@ -10,7 +10,9 @@
         opacity: 1;
     }
 }
-
+input {
+    box-sizing: border-box;
+}
 .error {
     color: red;
 }
@@ -62,8 +64,8 @@
     background-color: $ticket_scraper_blue;
     animation-name: fadeIn;
     animation-iteration-count: 1;
-    animation-timing-function: ease-in-out;
-    animation-duration: 1.5s;
+    animation-timing-function: ease-out;
+    animation-duration: 1.2s;
 }
 
 .upper-scraper > .label {
@@ -137,8 +139,9 @@
     width: 100%;
 }
 .upper-scraper .form .main .field {
-    width: 23%;
+    width: 23.5%;
     margin-right: 2%;
+    // margin: auto;
 }
 
 .upper-scraper .form .main .date {
@@ -158,7 +161,7 @@
 
 }
 
-.upper-scraper .form .main input {
+.upper-scraper .form .main input, .select {
     font-family: 'Assistant', sans-serif;
     font-style: normal;
     font-weight: 300;
@@ -167,6 +170,125 @@
     border-radius: 5px;
     padding: 0.5vw;
     width: 100%;
+    background-color: white;
+}
+
+// .upper-scraper .form .main .select {
+//     font-family: 'Assistant', sans-serif;
+//     font-style: normal;
+//     font-weight: 300;
+//     font-size: 1.2vw;
+//     border-width: 0px;
+//     border: 2px solid $ticket_scraper_green;
+//     border-radius: 5px;
+//     padding: 0.25vw;
+//     width: 100%;
+//     background-color: white;
+// }
+
+.select__control {
+    min-height: unset !important;
+}
+
+
+.select__menu
+{
+    top: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    background-color: hsl(0, 0%, 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px hsl(0deg 0% 0% / 10%), 0 4px 11px hsl(0deg 0% 0% / 10%);
+    margin-bottom: 8px;
+    margin-top: 8px;
+    box-sizing: border-box
+}
+
+.select__menu-list {
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    box-sizing: border-box;
+}
+
+.select__option {
+    cursor: default;
+    display: block;
+    font-size: inherit;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
+    color: inherit;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+.select__option--is-focused {
+    cursor: default;
+    display: block;
+    font-size: inherit;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color: #DEEBFF;
+    color: inherit;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+.select__option--is-selected {
+    cursor: default;
+    display: block;
+    font-size: inherit;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color: #2684FF;
+    color: hsl(0, 0%, 100%);
+    padding: 8px 12px;
+    box-sizing: border-box
+}
+.upper-scraper .form .submit {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 1vw;
+}
+
+.upper-scraper .form .submit button {
+    font-family: 'Akshar', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.5vw;
+    background-color: $ticket_scraper_blue;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 0.5vw;
+    
+}
+
+.upper-scraper .form .submit button:hover {
+    background-color: $ticket_scraper_darker_blue;
+    cursor: pointer;
+    -webkit-transition: background-color 0.25s linear;
+    -moz-transition: background-color 0.25s linear;
+    transition: background-color 0.25s linear;
 }
 
 
