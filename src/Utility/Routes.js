@@ -4,6 +4,7 @@ const CONSTANTS = {
 }
 const Routes = {
     journeys: CONSTANTS.megabusAPI + "/journeys",
+    destinationCities: CONSTANTS.megabusAPI + "/destination-cities",
     proxy: CONSTANTS.host + "/proxy",
 };
 

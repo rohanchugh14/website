@@ -15,14 +15,49 @@ import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import "../CSS/App.scss";
 
+const getDestinationCities = (originId, setDestinationCities) => {
+  let params = new URLSearchParams();
+  params.append("originCityId", originId);
+  let data = {
+    url: Routes.destinationCities,
+    method: "GET",
+    body: {},
+    headers: {},
+  };
+  axios.post(Routes.proxy, data, { params }).then((res) => {
+    console.log(res);
+    // get all destination cities and metadata
+    let cities = res.data.cities;
+    // remove origin city from list of destination cities,
+    // and format for react select by mapping each city to just
+    // the id and name as the value and label respectively
+    cities = cities.reduce((destinations, city) => {
+      if(city.id !== originId) {
+        destinations.push({ "value": city.id, "label": city.name});
+      }
+      return destinations;
+    }, []);
+    // cities = cities.map(city => {
+    //  return { "value": city.id, "label": city.name}
+    // }
+    // );
+    console.log("Cities", cities);
+    setDestinationCities(cities);
+  });
+}
+
 const Scraper = () => {
+  const [destinationCities, setDestinationCities] = useState([]);
   const [dateValue, setDateValue] = useState("single");
   const [firstDate, setFirstDate] = useState(new Date());
   const [secondDate, setSecondDate] = useState(new Date());
-  const options = [];
+  const [originCity, setOriginCity] = useState("");
+  const originCities = [];
   for (let city in cities) {
-    options.push({ value: cities[city], label: city });
+    originCities.push({ value: cities[city], label: city });
   }
+
+
   let params = new URLSearchParams();
 
 
@@ -89,9 +124,13 @@ const Scraper = () => {
                   className="select"
                   classNamePrefix={"select"}
                   isSearchable
-                  options={options}
-                  required 
+                  options={originCities}
+                  required
                   unstyled
+                  onChange={opt => {
+                    setOriginCity(opt.value);
+                    getDestinationCities(opt.value, setDestinationCities);
+                  }}
                   />
                   {/* <input
                     type="search"
@@ -108,12 +147,18 @@ const Scraper = () => {
                 </div>
                 <div>
                 <Select
+                  // signal to re-render when origin city changes and deselect
+                  // destination city
+                  key={originCity}
                   className="select"
                   classNamePrefix={"select"}
                   isSearchable
                   noOptionsMessage={() => {return "Select a city to leave from first."}}
-                  options={[]} 
-                  required 
+                  options={destinationCities} 
+                  defaultValue={null}
+                  clearVal
+                  required
+                  placeholder="Enter a city..."
                   unstyled/>
                 </div>
               </div>
