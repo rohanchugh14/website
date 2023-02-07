@@ -25,7 +25,6 @@ const getDestinationCities = (originId, setDestinationCities) => {
     headers: {},
   };
   axios.post(Routes.proxy, data, { params }).then((res) => {
-    console.log(res);
     // get all destination cities and metadata
     let cities = res.data.cities;
     // remove origin city from list of destination cities,
@@ -37,21 +36,26 @@ const getDestinationCities = (originId, setDestinationCities) => {
       }
       return destinations;
     }, []);
-    // cities = cities.map(city => {
-    //  return { "value": city.id, "label": city.name}
-    // }
-    // );
-    console.log("Cities", cities);
     setDestinationCities(cities);
   });
 };
 
+const getTickets = (e) => {
+  e.preventDefault();
+  console.log("Getting tickets");
+  // console.log(e.target[1].value);
+  for(let i = 0; i < e.target.length; i++) {
+    console.log(e.target[i].value);
+  }
+};
+
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
-  const [dateValue, setDateValue] = useState("single");
+  const [dateType, setDateType] = useState("single");
   const [firstDate, setFirstDate] = useState(new Date());
   const [secondDate, setSecondDate] = useState(new Date());
-  const [originCity, setOriginCity] = useState("");
+  const [originCity, setOriginCity] = useState(-1);
+  const [destinationCity, setDestinationCity] = useState(-1);
   const originCities = [];
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
@@ -91,12 +95,12 @@ const Scraper = () => {
           Enter the information below to find the cheapest bus ticket
         </div>
         <div className="form">
-          <form>
+          <form onSubmit={getTickets}>
             <div className="top-layer">
               <div className="label">Lets Go</div>
               <div
                 className="radio-buttons"
-                onChange={(e) => setDateValue(e.target.value)}
+                onChange={(e) => setDateType(e.target.value)}
               >
                 <input
                   type="radio"
@@ -159,10 +163,10 @@ const Scraper = () => {
                   />
                 </div>
               </div>
-              <div className="field date" key={dateValue}>
+              <div className="field date" key={dateType}>
                 <div>
                   <label htmlFor="firstDate">
-                    {dateValue === "single" ? "Date" : "Start Date"}
+                    {dateType === "single" ? "Date" : "Start Date"}
                   </label>
                 </div>
                 <div>
@@ -174,7 +178,7 @@ const Scraper = () => {
                   />
                 </div>
               </div>
-              {dateValue === "range" ? (
+              {dateType === "range" ? (
                 <div id="optionalSecondDate" className="field date">
                   <div>
                     <label htmlFor="secondDate">End Date</label>
@@ -200,13 +204,6 @@ const Scraper = () => {
           </form>
         </div>
       </div>
-      {/* <Card border="light" className="bg-white shadow-sm mb-4">
-                <Card.Body>
-                    <div className="center-text mb-2">
-                        <h1 className="mb-1">Ticket Scraper</h1>
-                    </div>
-                </Card.Body>
-            </Card> */}
     </div>
   );
 };
