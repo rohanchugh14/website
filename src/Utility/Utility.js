@@ -6,7 +6,7 @@ const Routes = {
     journeys: CONSTANTS.megabusAPI + "/journeys",
     destinationCities: CONSTANTS.megabusAPI + "/destination-cities",
     proxy: CONSTANTS.host + "/proxy",
-    travelDates: CONSTANTS.megabusAPI + "/travel-dates",
+    travelDates: CONSTANTS.megabusAPI + "/journeys/travel-dates",
 };
 
 const defaultParameters = {

@@ -39,13 +39,44 @@ const getDestinationCities = (originId, setDestinationCities) => {
   });
 };
 
-const getTickets = (e, originCity, destinationCity, firstDate, secondDate) => {
+const getTravelDates = async (firstDate, secondDate, originCity, destinationCity) => {
+  let params = new URLSearchParams();
+  params.append("originCityId", originCity);
+  params.append("destinationCityId", destinationCity);
+  let data = {
+    url: Routes.travelDates,
+    method: "GET",
+    body: {},
+    headers: {},
+  }
+  let dates = await axios.post(Routes.proxy, data, { params })
+  dates = dates.data.availableDates.filter(date=> {
+    let d = new Date(date);
+    // ensures that date comparisons are done in UTC since time is irrelevant
+    d.setDate(d.getUTCDate());
+   
+    return d >= firstDate && d <= secondDate;
+  });
+  
+
+  // let currentDate = new Date(firstDate);
+  // while (currentDate <= secondDate) {
+  //   dates.push(currentDate);
+  //   currentDate = new Date(currentDate);
+  //   currentDate.setDate(currentDate.getDate() + 1);
+  // }
+  return dates;
+}
+
+const getTickets = async (e, originCity, destinationCity, firstDate, secondDate) => {
   e.preventDefault();
   console.log("Getting tickets");
   let params = new URLSearchParams();
   for(let key in defaultParameters) {
     params.append(key, defaultParameters[key]);
   }
+  params.append("originId", originCity);
+  params.append("destinationId", destinationCity);
   // console.log(e.target[2]);
   // console.log(e.target[2].value);
   // console.log("origin City", originCity);
@@ -53,12 +84,12 @@ const getTickets = (e, originCity, destinationCity, firstDate, secondDate) => {
   // console.log("first date", firstDate.toISOString());
   // console.log("second date", secondDate.toISOString());
   // console.log(e.target[3].value);
-  console.log(e.target.length);
-  console.log(e.target[1].checked);
   let journeys = [];
   // if the user has selected multiple dates
   // we need to get all journeys between that range
   if(e.target[1].checked) {
+    let dates = await getTravelDates(firstDate, secondDate, originCity, destinationCity);
+    console.log(dates);
 
   }
   // params.append("originId", originId);
