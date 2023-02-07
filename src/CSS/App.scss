@@ -173,6 +173,11 @@ input {
     background-color: white;
 }
 
+.select:hover, .select__control:hover {
+    cursor: text;
+}
+
+
 // .upper-scraper .form .main .select {
 //     font-family: 'Assistant', sans-serif;
 //     font-style: normal;

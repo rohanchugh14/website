@@ -32,8 +32,8 @@ const getDestinationCities = (originId, setDestinationCities) => {
     // and format for react select by mapping each city to just
     // the id and name as the value and label respectively
     cities = cities.reduce((destinations, city) => {
-      if(city.id !== originId) {
-        destinations.push({ "value": city.id, "label": city.name});
+      if (city.id !== originId) {
+        destinations.push({ value: city.id, label: city.name });
       }
       return destinations;
     }, []);
@@ -44,7 +44,7 @@ const getDestinationCities = (originId, setDestinationCities) => {
     console.log("Cities", cities);
     setDestinationCities(cities);
   });
-}
+};
 
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
@@ -57,9 +57,7 @@ const Scraper = () => {
     originCities.push({ value: cities[city], label: city });
   }
 
-
   let params = new URLSearchParams();
-
 
   params.append("originId", "320");
   params.append("destinationId", "318");
@@ -119,26 +117,19 @@ const Scraper = () => {
                   <label htmlFor="origin">From</label>
                 </div>
                 <div>
-                  
                   <Select
-                  className="select"
-                  classNamePrefix={"select"}
-                  isSearchable
-                  options={originCities}
-                  required
-                  unstyled
-                  onChange={opt => {
-                    setOriginCity(opt.value);
-                    getDestinationCities(opt.value, setDestinationCities);
-                  }}
-                  />
-                  {/* <input
-                    type="search"
-                    id="origin"
-                    name="origin"
-                    placeholder="Enter a city"
+                    className="select"
+                    classNamePrefix={"select"}
+                    isSearchable
+                    options={originCities}
                     required
-                  /> */}
+                    unstyled
+                    onChange={(opt) => {
+                      setOriginCity(opt.value);
+                      getDestinationCities(opt.value, setDestinationCities);
+                    }}
+                    components={{ DropdownIndicator: () => null }}
+                  />
                 </div>
               </div>
               <div className="field">
@@ -146,20 +137,26 @@ const Scraper = () => {
                   <label htmlFor="destination">To</label>
                 </div>
                 <div>
-                <Select
-                  // signal to re-render when origin city changes and deselect
-                  // destination city
-                  key={originCity}
-                  className="select"
-                  classNamePrefix={"select"}
-                  isSearchable
-                  noOptionsMessage={() => {return "Select a city to leave from first."}}
-                  options={destinationCities} 
-                  defaultValue={null}
-                  clearVal
-                  required
-                  placeholder="Enter a city..."
-                  unstyled/>
+                  <Select
+                    // signal to re-render when origin city changes and deselect
+                    // destination city
+                    key={originCity}
+                    className="select"
+                    classNamePrefix={"select"}
+                    isSearchable
+                    noOptionsMessage={
+                      destinationCities.length
+                        ? () => "No cities found"
+                        : () => "Select a city to leave from first."
+                    }
+                    options={destinationCities}
+                    defaultValue={null}
+                    clearVal
+                    required
+                    placeholder="Enter a city..."
+                    unstyled
+                    components={{ DropdownIndicator: () => null }}
+                  />
                 </div>
               </div>
               <div className="field date" key={dateValue}>
