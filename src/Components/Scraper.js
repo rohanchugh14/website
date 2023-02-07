@@ -1,11 +1,10 @@
 // Imports
 import React from "react";
 import axios from "axios";
-import cities from "../Utility/Cities";
+import { Routes, cities, defaultParameters } from "../Utility/Utility";
 
 // Hooks
 import { useState } from "react";
-import { Routes } from "../Utility/Routes";
 
 // Components
 import DatePicker from "react-datepicker";
@@ -40,13 +39,32 @@ const getDestinationCities = (originId, setDestinationCities) => {
   });
 };
 
-const getTickets = (e) => {
+const getTickets = (e, originCity, destinationCity, firstDate, secondDate) => {
   e.preventDefault();
   console.log("Getting tickets");
-  // console.log(e.target[1].value);
-  for(let i = 0; i < e.target.length; i++) {
-    console.log(e.target[i].value);
+  let params = new URLSearchParams();
+  for(let key in defaultParameters) {
+    params.append(key, defaultParameters[key]);
   }
+  // console.log(e.target[2]);
+  // console.log(e.target[2].value);
+  // console.log("origin City", originCity);
+  // console.log("destination City", destinationCity);
+  // console.log("first date", firstDate.toISOString());
+  // console.log("second date", secondDate.toISOString());
+  // console.log(e.target[3].value);
+  console.log(e.target.length);
+  console.log(e.target[1].checked);
+  let journeys = [];
+  // if the user has selected multiple dates
+  // we need to get all journeys between that range
+  if(e.target[1].checked) {
+
+  }
+  // params.append("originId", originId);
+  // let 
+  
+
 };
 
 const Scraper = () => {
@@ -95,7 +113,7 @@ const Scraper = () => {
           Enter the information below to find the cheapest bus ticket
         </div>
         <div className="form">
-          <form onSubmit={getTickets}>
+          <form onSubmit={(e) => getTickets(e, originCity, destinationCity, firstDate, secondDate)}>
             <div className="top-layer">
               <div className="label">Lets Go</div>
               <div
@@ -148,6 +166,9 @@ const Scraper = () => {
                     className="select"
                     classNamePrefix={"select"}
                     isSearchable
+                    onChange={(opt) => {
+                      setDestinationCity(opt.value);
+                    }}
                     noOptionsMessage={
                       destinationCities.length
                         ? () => "No cities found"
@@ -177,6 +198,7 @@ const Scraper = () => {
                     required
                   />
                 </div>
+                
               </div>
               {dateType === "range" ? (
                 <div id="optionalSecondDate" className="field date">
