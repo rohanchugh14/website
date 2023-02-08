@@ -79,9 +79,46 @@ const getTickets = async (
   firstDate,
   secondDate,
   setJourneys,
-  setTableData
+  setTableData,
+  errors,
+  setErrors
 ) => {
   e.preventDefault();
+  let errorsPresent = false;
+  let currErrors = errors;
+  if(originCity == -1) {
+    currErrors = {...currErrors, originCity: "Please select an origin city"};
+    errorsPresent = true;
+  }
+  if(destinationCity == -1) {
+    currErrors = {...currErrors, destinationCity: "Please select a destination city"};
+    errorsPresent = true;
+  }
+  if(!firstDate) {
+    currErrors = {...currErrors, firstDate: "Please select a date"};
+    errorsPresent = true;
+  }
+  if(e.target[1].checked) {
+    if(!secondDate) {
+      currErrors = {...currErrors, secondDate: "Please select a second date"};
+      errorsPresent = true;
+    }
+    else if(secondDate < firstDate){
+      currErrors = {...currErrors, secondDate: "Please select a date that is after the first date"};
+      errorsPresent = true;
+    }
+  }
+
+  if(errorsPresent) {
+    console.log("errors present");
+    console.log(currErrors);
+    setErrors(currErrors);
+    return;
+  } else {
+    setErrors({}); // clear errors
+  }
+
+
 
   let journeys = [];
   let dates = [];
@@ -206,10 +243,10 @@ const Scraper = () => {
   const [originCity, setOriginCity] = useState(-1);
   const [destinationCity, setDestinationCity] = useState(-1);
   const [journeys, setJourneys] = useState(null);
-  const [increasingDate, setIncreasingDate] = useState(false);
+  const [increasingDate, setIncreasingDate] = useState(true);
   const [increasingPrice, setIncreasingPrice] = useState(false);
   const [tableData, setTableData] = useState(journeys ? journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>) : []);
-
+  const [errors, setErrors] = useState({});
   const originCities = [];
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
@@ -224,7 +261,7 @@ const Scraper = () => {
         <div className="form">
           <form
             onSubmit={(e) =>
-              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys, setTableData)
+              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys, setTableData, errors, setErrors)
             }
           >
             <div className="top-layer">
@@ -262,11 +299,14 @@ const Scraper = () => {
                     unstyled
                     onChange={(opt) => {
                       setOriginCity(opt.value);
+                      setErrors({ ...errors, originCity: "" });
                       getDestinationCities(opt.value, setDestinationCities);
                     }}
                     components={{ DropdownIndicator: () => null }}
                   />
                 </div>
+                {errors.originCity && <span className="error">{errors.originCity}</span>}
+                {/* {<span className="error">{errors.originCity ? errors.originCity : " "}</span>} */}
               </div>
               <div className="field">
                 <div>
@@ -282,6 +322,7 @@ const Scraper = () => {
                     isSearchable
                     onChange={(opt) => {
                       setDestinationCity(opt.value);
+                      setErrors({ ...errors, destinationCity: "" });
                     }}
                     noOptionsMessage={
                       destinationCities.length
@@ -297,6 +338,9 @@ const Scraper = () => {
                     components={{ DropdownIndicator: () => null }}
                   />
                 </div>
+                {errors.destinationCity && (
+                  <span className="error">{errors.destinationCity}</span>
+                )}
               </div>
               <div className="field date" key={dateType}>
                 <div>
@@ -312,6 +356,9 @@ const Scraper = () => {
                     required
                   />
                 </div>
+                {errors.firstDate && (
+                  <span className="error">{errors.firstDate}</span>
+                )}
               </div>
               {dateType === "range" ? (
                 <div id="optionalSecondDate" className="field date">
@@ -326,6 +373,12 @@ const Scraper = () => {
                       required
                     />
                   </div>
+                  {<span className="error">{errors.secondDate ? errors.secondDate : ""} </span>
+                  
+                  // errors.secondDate && (
+                  //   <span className="error">{errors.secondDate}</span>
+                  // )
+                }
                 </div>
               ) : (
                 <></>
