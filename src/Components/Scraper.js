@@ -113,23 +113,13 @@ const getTickets = async (
   }
   console.log(dates);
 
-  journeys = dates.reduce((journeys, date) => {
-    let testParams = new URLSearchParams();
-    let c = 0;
-    c++;
-    console.log("c", c);
-    for (let key in defaultParameters) {
-      testParams.append(key, defaultParameters[key]);
-    }
-    testParams.append("originId", originCity);
-    testParams.append("destinationId", destinationCity);
-    // let paramsCopy = params;
-    testParams.append("departureDate", date);
-    for(const [key, value] of testParams) {
-      console.log(key,value);
-      // console.log(value);
+  journeys =  dates.reduce((tickets, date) => {
+    let params = new URLSearchParams(defaultParameters);
 
-    }
+    params.append("originId", originCity);
+    params.append("destinationId", destinationCity);
+    params.append("departureDate", date);
+    
     let data = {
       url: Routes.journeys,
       method: "GET",
@@ -137,22 +127,23 @@ const getTickets = async (
       headers: {},
     };
     console.log("testing");
-    axios.post(Routes.proxy, data, { testParams }).then( (res) => {
-      console.log(res);
-      console.log(res.journeys);
-      // journeys.push(...res.journeys);
-      // return journeys;
-    })
-    journeys.push(date);
-    return journeys;
+    tickets.push(axios.post(Routes.proxy, data, { params }).then((res) => {
+      return res.data;
+    }));
+    return tickets;
+    // console.log(res);
+    console.log(journeys);
+    tickets.push(date);
+    return tickets;
     // console.log(res);
     // console.log(res.journeys);
     // journeys.push(...res.journeys);
     // return journeys;
   }, []);
+  
+  journeys = await Promise.all(journeys);
   console.log(journeys);
-
-  // let allJourneys = await Promise.all(journeys);
+  // console.log(journeys[0].data);
   console.log("Finished?");
   // console.log(allJourneys);
   // params.append("originId", originId);
@@ -170,12 +161,16 @@ const Scraper = () => {
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
   }
-
+  // let params = new URLSearchParams();
   let params = new URLSearchParams();
   for (let key in defaultParameters) {
-    console.log(String(key), String(defaultParameters[key]));
-    params.append(String(key), String(defaultParameters[key]));
+    // console.log(String(key), String(defaultParameters[key]));
+    params.append(key, defaultParameters[key]);
   }
+  // let keys = ["days", "concessionCount", "totalPassengers", "nusCount", "otherDisabilityCount", "wheelchairSeated", "pcaCount"];
+  // for(let key of keys) {
+  //   params.append(key, defaultParameters[key]);
+  // }
   params.append("originId", "320");
   params.append("destinationId", "318");
   params.append("departureDate", "2023-02-03");
@@ -186,6 +181,11 @@ const Scraper = () => {
   // params.append("wheelchairSeated", "0");
   // params.append("pcaCount", "0");
   // params.append("days", "1");
+  // let key = "days";
+  // params.append(key, defaultParameters[key]);
+  // for(const [key, value] of params2) {
+  //   console.log(key,value);
+  // }
   let data = {
     url: Routes.journeys,
     method: "GET",
