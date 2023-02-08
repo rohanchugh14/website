@@ -1,12 +1,14 @@
 const CONSTANTS = {
     megabusAPI: "https://us.megabus.com/journey-planner/api",
     host: "http://localhost:3001",
+    megabusTickets: "https://us.megabus.com/journey-planner",
 }
 const Routes = {
     journeys: CONSTANTS.megabusAPI + "/journeys",
     destinationCities: CONSTANTS.megabusAPI + "/destination-cities",
     proxy: CONSTANTS.host + "/proxy",
     travelDates: CONSTANTS.megabusAPI + "/journeys/travel-dates",
+    tickets: CONSTANTS.megabusTickets + "/journeys",
 };
 
 const defaultParameters = {

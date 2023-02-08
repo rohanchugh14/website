@@ -177,11 +177,18 @@ const TableRow = (props) => {
     time = time.join(":") + " " + ampm;
     // format journey.price to always have two decimal places
     let price = `$${journey.price.toFixed(2)}`;
-
+    console.log(Routes.tickets);
+    let url = new URL(Routes.tickets);
+    for(let param in defaultParameters) {
+      url.searchParams.append(param, defaultParameters[param]);
+    }
+    url.searchParams.append("originId", journey.origin.cityId);
+    url.searchParams.append("destinationId", journey.destination.cityId);
+    url.searchParams.append("departureDate", journey.departureDateTime.slice(0,10));
     return (
       <tr>
         <td>{date}</td>
-        <td className="highlight">Megabus</td>
+        <td><a className="highlight" rel="noreferrer" href={url.toString()} target="_blank">Megabus</a></td>
         <td>{journey.origin.cityName}</td>
         <td>{journey.destination.cityName}</td>
         <td>{time}</td>
