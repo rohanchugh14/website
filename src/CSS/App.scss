@@ -66,6 +66,7 @@ input {
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
     animation-duration: 1.2s;
+    // margin-bottom: 2vw; 
 }
 
 .upper-scraper > .label {
@@ -90,6 +91,7 @@ input {
     padding: 1.5vw;
     padding-top: 1vw;
     margin-top: 1vw;
+    margin-bottom: 2vw;
 }
 .upper-scraper .form .top-layer {
     display: flex;
@@ -297,4 +299,58 @@ input {
     transition: background-color 0.25s linear;
 }
 
+.lower-scraper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1vw;
+    padding-left: 3vw;
+    padding-right: 3vw;
+}
 
+.lower-scraper .instructions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.lower-scraper .instructions .instruction {
+    font-family: 'Assistant';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.2vw;
+    color: $ticket_scraper_grey
+}
+
+.lower-scraper .highlight {
+    color: $ticket_scraper_green;
+}
+
+.lower-scraper table {
+    width: 100%;
+    font-size: 1.2vw;
+    margin-top: 1vw;
+    font-weight: 400;
+    font-family: 'Assistant';
+    font-style: normal;
+    border-bottom: 3px solid $ticket_scraper_grey;
+    border-spacing: 0 1vw;
+
+}
+
+.lower-scraper .table tr {
+    // padding-top: 3vw;
+    // padding-bottom: 3vw;
+}
+
+.lower-scraper .table td {
+    
+}
+.lower-scraper .table th {
+    border-bottom: 3px solid $ticket_scraper_blue;
+    text-align: left;
+    font-size: 1.4vw;
+    
+}
+// .lower-scraper .table tr.header th {
+// }

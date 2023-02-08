@@ -61,20 +61,13 @@ const getTravelDates = async (
   };
   let tempFirstDate = new Date(getDateStr(firstDate));
   let tempSecondDate = new Date(getDateStr(secondDate));
-  console.log(tempSecondDate);
   let dates = await axios.post(Routes.proxy, data, { params });
-  console.log(dates.data.availableDates);
   dates = dates.data.availableDates.filter((date) => {
     let d = new Date(date);
     return d >= tempFirstDate && d <= tempSecondDate;
   });
 
-  // let currentDate = new Date(firstDate);
-  // while (currentDate <= secondDate) {
-  //   dates.push(currentDate);
-  //   currentDate = new Date(currentDate);
-  //   currentDate.setDate(currentDate.getDate() + 1);
-  // }
+  
   return dates;
 };
 
@@ -83,18 +76,11 @@ const getTickets = async (
   originCity,
   destinationCity,
   firstDate,
-  secondDate
+  secondDate,
+  setJourneys
 ) => {
   e.preventDefault();
-  console.log("Getting tickets");
 
-  // console.log(e.target[2]);
-  // console.log(e.target[2].value);
-  // console.log("origin City", originCity);
-  // console.log("destination City", destinationCity);
-  // console.log("first date", firstDate.toISOString());
-  // console.log("second date", secondDate.toISOString());
-  // console.log(e.target[3].value);
   let journeys = [];
   let dates = [];
   // if the user has selected multiple dates
@@ -107,13 +93,10 @@ const getTickets = async (
       destinationCity
     );
     dates = allDates;
-    console.log(dates);
   } else {
     dates.push(getDateStr(firstDate));
   }
-  console.log(dates);
-
-  journeys =  dates.reduce((tickets, date) => {
+  for(let date of dates) {
     let params = new URLSearchParams(defaultParameters);
 
     params.append("originId", originCity);
@@ -126,28 +109,11 @@ const getTickets = async (
       body: {},
       headers: {},
     };
-    console.log("testing");
-    tickets.push(axios.post(Routes.proxy, data, { params }).then((res) => {
-      return res.data;
-    }));
-    return tickets;
-    // console.log(res);
-    console.log(journeys);
-    tickets.push(date);
-    return tickets;
-    // console.log(res);
-    // console.log(res.journeys);
-    // journeys.push(...res.journeys);
-    // return journeys;
-  }, []);
-  
-  journeys = await Promise.all(journeys);
+    let res = await axios.post(Routes.proxy, data, { params });
+    journeys.push(...res.data.journeys);
+  }
   console.log(journeys);
-  // console.log(journeys[0].data);
-  console.log("Finished?");
-  // console.log(allJourneys);
-  // params.append("originId", originId);
-  // let
+  setJourneys(journeys);
 };
 
 const Scraper = () => {
@@ -157,35 +123,16 @@ const Scraper = () => {
   const [secondDate, setSecondDate] = useState(new Date());
   const [originCity, setOriginCity] = useState(-1);
   const [destinationCity, setDestinationCity] = useState(-1);
+  const [journeys, setJourneys] = useState(null);
   const originCities = [];
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
   }
-  // let params = new URLSearchParams();
-  let params = new URLSearchParams();
-  for (let key in defaultParameters) {
-    // console.log(String(key), String(defaultParameters[key]));
-    params.append(key, defaultParameters[key]);
-  }
-  // let keys = ["days", "concessionCount", "totalPassengers", "nusCount", "otherDisabilityCount", "wheelchairSeated", "pcaCount"];
-  // for(let key of keys) {
-  //   params.append(key, defaultParameters[key]);
-  // }
+  let params = new URLSearchParams(defaultParameters);
   params.append("originId", "320");
   params.append("destinationId", "318");
   params.append("departureDate", "2023-02-03");
-  // params.append("totalPassengers", "1");
-  // params.append("concessionCount", "0");
-  // params.append("nusCount", "0");
-  // params.append("otherDisabilityCount", "0");
-  // params.append("wheelchairSeated", "0");
-  // params.append("pcaCount", "0");
-  // params.append("days", "1");
-  // let key = "days";
-  // params.append(key, defaultParameters[key]);
-  // for(const [key, value] of params2) {
-  //   console.log(key,value);
-  // }
+  
   let data = {
     url: Routes.journeys,
     method: "GET",
@@ -210,7 +157,7 @@ const Scraper = () => {
         <div className="form">
           <form
             onSubmit={(e) =>
-              getTickets(e, originCity, destinationCity, firstDate, secondDate)
+              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys)
             }
           >
             <div className="top-layer">
@@ -324,6 +271,41 @@ const Scraper = () => {
           </form>
         </div>
       </div>
+      {journeys ? ( 
+      <div className="lower-scraper">
+        <div className="instructions">
+          <div className="instruction">
+
+          Select the bus ticket to book your ride
+          </div>
+          <div className="instruction">
+            Click the <span className="highlight">arrows</span> to sort your results
+          </div>
+        </div>
+        <div className="table">
+          <table>
+            <tr className="header">
+                <th>Date</th>
+                <th>Bus Ticket</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Time</th>
+                <th>Price</th>
+            </tr>
+            {
+
+            }
+            <tr>
+              <td>mm/dd/yy</td>
+              <td className="highlight">Brand of Bus (Link to ticket)</td>
+              <td>From city, state</td>
+              <td>To city, state</td>
+              <td>00:00 AM/PM</td>
+              <td className="highlight">$0.00</td>
+            </tr>
+          </table>        
+        </div>
+      </div>) : <></> }
     </div>
   );
 };
