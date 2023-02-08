@@ -1,7 +1,12 @@
 // Imports
 import React from "react";
 import axios from "axios";
-import { Routes, cities, defaultParameters } from "../Utility/Utility";
+import {
+  Routes,
+  cities,
+  defaultParameters,
+  getDateStr,
+} from "../Utility/Utility";
 
 // Hooks
 import { useState } from "react";
@@ -39,7 +44,12 @@ const getDestinationCities = (originId, setDestinationCities) => {
   });
 };
 
-const getTravelDates = async (firstDate, secondDate, originCity, destinationCity) => {
+const getTravelDates = async (
+  firstDate,
+  secondDate,
+  originCity,
+  destinationCity
+) => {
   let params = new URLSearchParams();
   params.append("originCityId", originCity);
   params.append("destinationCityId", destinationCity);
@@ -48,16 +58,16 @@ const getTravelDates = async (firstDate, secondDate, originCity, destinationCity
     method: "GET",
     body: {},
     headers: {},
-  }
-  let dates = await axios.post(Routes.proxy, data, { params })
-  dates = dates.data.availableDates.filter(date=> {
+  };
+  let tempFirstDate = new Date(getDateStr(firstDate));
+  let tempSecondDate = new Date(getDateStr(secondDate));
+  console.log(tempSecondDate);
+  let dates = await axios.post(Routes.proxy, data, { params });
+  console.log(dates.data.availableDates);
+  dates = dates.data.availableDates.filter((date) => {
     let d = new Date(date);
-    // ensures that date comparisons are done in UTC since time is irrelevant
-    d.setDate(d.getUTCDate());
-   
-    return d >= firstDate && d <= secondDate;
+    return d >= tempFirstDate && d <= tempSecondDate;
   });
-  
 
   // let currentDate = new Date(firstDate);
   // while (currentDate <= secondDate) {
@@ -66,17 +76,18 @@ const getTravelDates = async (firstDate, secondDate, originCity, destinationCity
   //   currentDate.setDate(currentDate.getDate() + 1);
   // }
   return dates;
-}
+};
 
-const getTickets = async (e, originCity, destinationCity, firstDate, secondDate) => {
+const getTickets = async (
+  e,
+  originCity,
+  destinationCity,
+  firstDate,
+  secondDate
+) => {
   e.preventDefault();
   console.log("Getting tickets");
-  let params = new URLSearchParams();
-  for(let key in defaultParameters) {
-    params.append(key, defaultParameters[key]);
-  }
-  params.append("originId", originCity);
-  params.append("destinationId", destinationCity);
+
   // console.log(e.target[2]);
   // console.log(e.target[2].value);
   // console.log("origin City", originCity);
@@ -85,17 +96,67 @@ const getTickets = async (e, originCity, destinationCity, firstDate, secondDate)
   // console.log("second date", secondDate.toISOString());
   // console.log(e.target[3].value);
   let journeys = [];
+  let dates = [];
   // if the user has selected multiple dates
   // we need to get all journeys between that range
-  if(e.target[1].checked) {
-    let dates = await getTravelDates(firstDate, secondDate, originCity, destinationCity);
+  if (e.target[1].checked) {
+    let allDates = await getTravelDates(
+      firstDate,
+      secondDate,
+      originCity,
+      destinationCity
+    );
+    dates = allDates;
     console.log(dates);
-
+  } else {
+    dates.push(getDateStr(firstDate));
   }
-  // params.append("originId", originId);
-  // let 
-  
+  console.log(dates);
 
+  journeys = dates.reduce((journeys, date) => {
+    let testParams = new URLSearchParams();
+    let c = 0;
+    c++;
+    console.log("c", c);
+    for (let key in defaultParameters) {
+      testParams.append(key, defaultParameters[key]);
+    }
+    testParams.append("originId", originCity);
+    testParams.append("destinationId", destinationCity);
+    // let paramsCopy = params;
+    testParams.append("departureDate", date);
+    for(const [key, value] of testParams) {
+      console.log(key,value);
+      // console.log(value);
+
+    }
+    let data = {
+      url: Routes.journeys,
+      method: "GET",
+      body: {},
+      headers: {},
+    };
+    console.log("testing");
+    axios.post(Routes.proxy, data, { testParams }).then( (res) => {
+      console.log(res);
+      console.log(res.journeys);
+      // journeys.push(...res.journeys);
+      // return journeys;
+    })
+    journeys.push(date);
+    return journeys;
+    // console.log(res);
+    // console.log(res.journeys);
+    // journeys.push(...res.journeys);
+    // return journeys;
+  }, []);
+  console.log(journeys);
+
+  // let allJourneys = await Promise.all(journeys);
+  console.log("Finished?");
+  // console.log(allJourneys);
+  // params.append("originId", originId);
+  // let
 };
 
 const Scraper = () => {
@@ -111,17 +172,20 @@ const Scraper = () => {
   }
 
   let params = new URLSearchParams();
-
+  for (let key in defaultParameters) {
+    console.log(String(key), String(defaultParameters[key]));
+    params.append(String(key), String(defaultParameters[key]));
+  }
   params.append("originId", "320");
   params.append("destinationId", "318");
   params.append("departureDate", "2023-02-03");
-  params.append("totalPassengers", "1");
-  params.append("concessionCount", "0");
-  params.append("nusCount", "0");
-  params.append("otherDisabilityCount", "0");
-  params.append("wheelchairSeated", "0");
-  params.append("pcaCount", "0");
-  params.append("days", "1");
+  // params.append("totalPassengers", "1");
+  // params.append("concessionCount", "0");
+  // params.append("nusCount", "0");
+  // params.append("otherDisabilityCount", "0");
+  // params.append("wheelchairSeated", "0");
+  // params.append("pcaCount", "0");
+  // params.append("days", "1");
   let data = {
     url: Routes.journeys,
     method: "GET",
@@ -144,7 +208,11 @@ const Scraper = () => {
           Enter the information below to find the cheapest bus ticket
         </div>
         <div className="form">
-          <form onSubmit={(e) => getTickets(e, originCity, destinationCity, firstDate, secondDate)}>
+          <form
+            onSubmit={(e) =>
+              getTickets(e, originCity, destinationCity, firstDate, secondDate)
+            }
+          >
             <div className="top-layer">
               <div className="label">Lets Go</div>
               <div
@@ -229,7 +297,6 @@ const Scraper = () => {
                     required
                   />
                 </div>
-                
               </div>
               {dateType === "range" ? (
                 <div id="optionalSecondDate" className="field date">

@@ -19,6 +19,18 @@ const defaultParameters = {
     "pcaCount": 0,
 }
 
+const getDateStr = (date) => {
+    let dateStr = "";
+    dateStr += date.getFullYear() + "-";
+    if(date.getMonth() < 9)
+        dateStr += "0";
+    dateStr += (date.getMonth()+1) + "-";
+    if(date.getDate() < 10)
+        dateStr += "0";
+    dateStr += date.getDate();
+    return dateStr;
+}
+
 const cities = {
     "Abbotsford, WI": 542,
     "Aiken, SC": 648,
@@ -317,4 +329,4 @@ const cities = {
   }
 
 
-export { CONSTANTS, Routes, defaultParameters, cities };
+export { CONSTANTS, Routes, defaultParameters, cities, getDateStr };
