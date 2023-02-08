@@ -7,6 +7,7 @@ import {
   defaultParameters,
   getDateStr,
 } from "../Utility/Utility";
+import sortingArrows from "../Static/sorting_arrows.png";
 
 // Hooks
 import { useState } from "react";
@@ -77,7 +78,8 @@ const getTickets = async (
   destinationCity,
   firstDate,
   secondDate,
-  setJourneys
+  setJourneys,
+  setTableData
 ) => {
   e.preventDefault();
 
@@ -109,12 +111,85 @@ const getTickets = async (
       body: {},
       headers: {},
     };
-    let res = await axios.post(Routes.proxy, data, { params });
-    journeys.push(...res.data.journeys);
+    let res = axios.post(Routes.proxy, data, { params });
+    // journeys.push(...res.data.journeys);
+    journeys.push(res);
   }
+  journeys = await Promise.all(journeys);
+  journeys = journeys.reduce((acc, journey) => {
+    acc.push(...journey.data.journeys);
+    return acc;
+  }, []);
+  // journeys = journeys.map((journey) => journey.data.journeys);
   console.log(journeys);
+  setTableData(journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
   setJourneys(journeys);
+  // setTableData(getJourneyRows(journeys));
 };
+
+const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourneys, setTableData, setIncreasingDate, setIncreasingPrice) => {
+  console.log("sorting journeys");
+
+  let sortedJourneys = journeys;
+  if (label === "date") {
+
+    sortedJourneys = journeys.sort((a, b) => {
+      let aDate = new Date(a.departureDateTime);
+      let bDate = new Date(b.departureDateTime);
+      if(increasingDate) {
+        setIncreasingDate(false);
+        return bDate - aDate;
+      } else {
+        setIncreasingDate(true);
+        return aDate - bDate;
+      }
+    });
+  } else if (label === "price") {
+    sortedJourneys = journeys.sort((a, b) => {
+      if(a.price !== b.price) {
+        if(increasingPrice) {
+          setIncreasingPrice(false);
+          return b.price - a.price;
+        }
+        setIncreasingPrice(true);
+        return a.price - b.price;
+      }
+      let aDate = new Date(a.departureDateTime);
+      let bDate = new Date(b.departureDateTime);
+      setIncreasingPrice(!increasingPrice)
+      return aDate - bDate;
+    });
+  }
+  console.log(sortedJourneys);
+  setJourneys(sortedJourneys);
+  setTableData(sortedJourneys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
+}
+
+const TableRow = (props) => {
+    let journey = props.journey;
+    let date = journey.departureDateTime.slice(5,7) + "/" + journey.departureDateTime.slice(8,10) + "/" + journey.departureDateTime.slice(2,4);
+    let time = journey.departureDateTime.slice(11,16).split(":");
+    let ampm = "AM";
+    if (parseInt(time[0]) > 12) {
+      time[0] = parseInt(time[0]) - 12;
+      ampm = "PM";
+    }
+    time = time.join(":") + " " + ampm;
+    // format journey.price to always have two decimal places
+    let price = `$${journey.price.toFixed(2)}`;
+
+    return (
+      <tr>
+        <td>{date}</td>
+        <td className="highlight">Megabus</td>
+        <td>{journey.origin.cityName}</td>
+        <td>{journey.destination.cityName}</td>
+        <td>{time}</td>
+        <td className="highlight">{price}</td>
+      </tr>
+    )
+  
+}
 
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
@@ -124,30 +199,15 @@ const Scraper = () => {
   const [originCity, setOriginCity] = useState(-1);
   const [destinationCity, setDestinationCity] = useState(-1);
   const [journeys, setJourneys] = useState(null);
+  const [increasingDate, setIncreasingDate] = useState(false);
+  const [increasingPrice, setIncreasingPrice] = useState(false);
+  const [tableData, setTableData] = useState(journeys ? journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>) : []);
+
   const originCities = [];
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
   }
-  let params = new URLSearchParams(defaultParameters);
-  params.append("originId", "320");
-  params.append("destinationId", "318");
-  params.append("departureDate", "2023-02-03");
   
-  let data = {
-    url: Routes.journeys,
-    method: "GET",
-    body: {},
-    headers: {},
-  };
-  axios
-    .post(Routes.proxy, data, { params })
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
   return (
     <div>
       <div className="upper-scraper">
@@ -157,7 +217,7 @@ const Scraper = () => {
         <div className="form">
           <form
             onSubmit={(e) =>
-              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys)
+              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys, setTableData)
             }
           >
             <div className="top-layer">
@@ -188,6 +248,7 @@ const Scraper = () => {
                   <Select
                     className="select"
                     classNamePrefix={"select"}
+                    placeholder="Enter a city..."
                     isSearchable
                     options={originCities}
                     required
@@ -285,24 +346,48 @@ const Scraper = () => {
         <div className="table">
           <table>
             <tr className="header">
-                <th>Date</th>
+                <th><span className="sortable" onClick={() => sortJourneys(journeys, increasingDate, increasingPrice, "date", setJourneys, setTableData, setIncreasingDate, setIncreasingPrice)}>Date <img src={sortingArrows} alt="Arrows to sort table"></img></span></th>
                 <th>Bus Ticket</th>
                 <th>From</th>
                 <th>To</th>
                 <th>Time</th>
-                <th>Price</th>
+                <th><span className="sortable" onClick={() => sortJourneys(journeys,increasingDate, increasingPrice ,"price", setJourneys, setTableData, setIncreasingDate, setIncreasingPrice)}>Price <img src={sortingArrows} alt="Arrows to sort table"></img></span></th>
             </tr>
             {
-
+              // journeys.map((journey) => {
+              //   let date = journey.departureDateTime.slice(5,7) + "/" + journey.departureDateTime.slice(8,10) + "/" + journey.departureDateTime.slice(2,4);
+              //   let time = journey.departureDateTime.slice(11,16).split(":");
+              //   let ampm = "AM";
+              //   if (parseInt(time[0]) > 12) {
+              //     time[0] = parseInt(time[0]) - 12;
+              //     ampm = "PM";
+              //   }
+              //   time = time.join(":") + " " + ampm;
+              //   // format journey.price to always have two decimal places
+              //   let price = `$${journey.price.toFixed(2)}`;
+              //   console.log(journey.journeyId);
+              //   return (
+              //     <tr key={journey.journeyId.toString()}>
+              //       <td>{date}</td>
+              //       <td className="highlight">Megabus</td>
+              //       <td>{journey.origin.cityName}</td>
+              //       <td>{journey.destination.cityName}</td>
+              //       <td>{time}</td>
+              //       <td className="highlight">{price}</td>
+              //     </tr>
+              //   )
+              // })
+              tableData
+              // journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()} />)
             }
-            <tr>
+            {/* <tr>
               <td>mm/dd/yy</td>
               <td className="highlight">Brand of Bus (Link to ticket)</td>
               <td>From city, state</td>
               <td>To city, state</td>
               <td>00:00 AM/PM</td>
               <td className="highlight">$0.00</td>
-            </tr>
+            </tr> */}
           </table>        
         </div>
       </div>) : <></> }
