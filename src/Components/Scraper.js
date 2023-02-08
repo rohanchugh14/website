@@ -86,11 +86,11 @@ const getTickets = async (
   e.preventDefault();
   let errorsPresent = false;
   let currErrors = errors;
-  if(originCity == -1) {
+  if(originCity === -1) {
     currErrors = {...currErrors, originCity: "Please select an origin city"};
     errorsPresent = true;
   }
-  if(destinationCity == -1) {
+  if(destinationCity === -1) {
     currErrors = {...currErrors, destinationCity: "Please select a destination city"};
     errorsPresent = true;
   }
@@ -110,8 +110,6 @@ const getTickets = async (
   }
 
   if(errorsPresent) {
-    console.log("errors present");
-    console.log(currErrors);
     setErrors(currErrors);
     return;
   } else {
@@ -158,14 +156,12 @@ const getTickets = async (
     return acc;
   }, []);
   // journeys = journeys.map((journey) => journey.data.journeys);
-  console.log(journeys);
   setTableData(journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
   setJourneys(journeys);
   // setTableData(getJourneyRows(journeys));
 };
 
 const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourneys, setTableData, setIncreasingDate, setIncreasingPrice) => {
-  console.log("sorting journeys");
 
   let sortedJourneys = journeys;
   if (label === "date") {
@@ -197,7 +193,6 @@ const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourn
       return aDate - bDate;
     });
   }
-  console.log(sortedJourneys);
   setJourneys(sortedJourneys);
   setTableData(sortedJourneys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
 }
@@ -214,7 +209,6 @@ const TableRow = (props) => {
     time = time.join(":") + " " + ampm;
     // format journey.price to always have two decimal places
     let price = `$${journey.price.toFixed(2)}`;
-    console.log(Routes.tickets);
     let url = new URL(Routes.tickets);
     for(let param in defaultParameters) {
       url.searchParams.append(param, defaultParameters[param]);
@@ -306,7 +300,6 @@ const Scraper = () => {
                   />
                 </div>
                 {errors.originCity && <span className="error">{errors.originCity}</span>}
-                {/* {<span className="error">{errors.originCity ? errors.originCity : " "}</span>} */}
               </div>
               <div className="field">
                 <div>
@@ -373,11 +366,11 @@ const Scraper = () => {
                       required
                     />
                   </div>
-                  {<span className="error">{errors.secondDate ? errors.secondDate : ""} </span>
+                  {
                   
-                  // errors.secondDate && (
-                  //   <span className="error">{errors.secondDate}</span>
-                  // )
+                  errors.secondDate && (
+                    <span className="error">{errors.secondDate}</span>
+                  )
                 }
                 </div>
               ) : (
@@ -413,41 +406,7 @@ const Scraper = () => {
                 <th>Time</th>
                 <th><span className="sortable" onClick={() => sortJourneys(journeys,increasingDate, increasingPrice ,"price", setJourneys, setTableData, setIncreasingDate, setIncreasingPrice)}>Price <img src={sortingArrows} alt="Arrows to sort table"></img></span></th>
             </tr>
-            {
-              // journeys.map((journey) => {
-              //   let date = journey.departureDateTime.slice(5,7) + "/" + journey.departureDateTime.slice(8,10) + "/" + journey.departureDateTime.slice(2,4);
-              //   let time = journey.departureDateTime.slice(11,16).split(":");
-              //   let ampm = "AM";
-              //   if (parseInt(time[0]) > 12) {
-              //     time[0] = parseInt(time[0]) - 12;
-              //     ampm = "PM";
-              //   }
-              //   time = time.join(":") + " " + ampm;
-              //   // format journey.price to always have two decimal places
-              //   let price = `$${journey.price.toFixed(2)}`;
-              //   console.log(journey.journeyId);
-              //   return (
-              //     <tr key={journey.journeyId.toString()}>
-              //       <td>{date}</td>
-              //       <td className="highlight">Megabus</td>
-              //       <td>{journey.origin.cityName}</td>
-              //       <td>{journey.destination.cityName}</td>
-              //       <td>{time}</td>
-              //       <td className="highlight">{price}</td>
-              //     </tr>
-              //   )
-              // })
-              tableData
-              // journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()} />)
-            }
-            {/* <tr>
-              <td>mm/dd/yy</td>
-              <td className="highlight">Brand of Bus (Link to ticket)</td>
-              <td>From city, state</td>
-              <td>To city, state</td>
-              <td>00:00 AM/PM</td>
-              <td className="highlight">$0.00</td>
-            </tr> */}
+            {tableData}
           </table>        
         </div>
       </div>) : <></> }
