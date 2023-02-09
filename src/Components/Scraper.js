@@ -68,7 +68,6 @@ const getTravelDates = async (
     return d >= tempFirstDate && d <= tempSecondDate;
   });
 
-  
   return dates;
 };
 
@@ -86,37 +85,42 @@ const getTickets = async (
   e.preventDefault();
   let errorsPresent = false;
   let currErrors = errors;
-  if(originCity === -1) {
-    currErrors = {...currErrors, originCity: "Please select an origin city"};
+  if (originCity === -1) {
+    currErrors = { ...currErrors, originCity: "Please select an origin city" };
     errorsPresent = true;
   }
-  if(destinationCity === -1) {
-    currErrors = {...currErrors, destinationCity: "Please select a destination city"};
+  if (destinationCity === -1) {
+    currErrors = {
+      ...currErrors,
+      destinationCity: "Please select a destination city",
+    };
     errorsPresent = true;
   }
-  if(!firstDate) {
-    currErrors = {...currErrors, firstDate: "Please select a date"};
+  if (!firstDate) {
+    currErrors = { ...currErrors, firstDate: "Please select a date" };
     errorsPresent = true;
   }
-  if(e.target[1].checked) {
-    if(!secondDate) {
-      currErrors = {...currErrors, secondDate: "Please select a second date"};
+  if (e.target[1].checked) {
+    if (!secondDate) {
+      currErrors = { ...currErrors, secondDate: "Please select a second date" };
       errorsPresent = true;
-    }
-    else if(secondDate < firstDate){
-      currErrors = {...currErrors, secondDate: "Please select a date that is after the first date"};
+    } else if (secondDate < firstDate) {
+      currErrors = {
+        ...currErrors,
+        secondDate: "Please select a date that is after the first date",
+      };
       errorsPresent = true;
     }
   }
 
-  if(errorsPresent) {
+  if (errorsPresent) {
     setErrors(currErrors);
     return;
   } else {
     setErrors({}); // clear errors
   }
 
-
+  setTableData("loading");
 
   let journeys = [];
   let dates = [];
@@ -133,13 +137,13 @@ const getTickets = async (
   } else {
     dates.push(getDateStr(firstDate));
   }
-  for(let date of dates) {
+  for (let date of dates) {
     let params = new URLSearchParams(defaultParameters);
 
     params.append("originId", originCity);
     params.append("destinationId", destinationCity);
     params.append("departureDate", date);
-    
+
     let data = {
       url: Routes.journeys,
       method: "GET",
@@ -156,20 +160,31 @@ const getTickets = async (
     return acc;
   }, []);
   // journeys = journeys.map((journey) => journey.data.journeys);
-  setTableData(journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
+  setTableData(
+    journeys.map((journey) => (
+      <TableRow journey={journey} key={journey.journeyId.toString()} />
+    ))
+  );
   setJourneys(journeys);
   // setTableData(getJourneyRows(journeys));
 };
 
-const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourneys, setTableData, setIncreasingDate, setIncreasingPrice) => {
-
+const sortJourneys = (
+  journeys,
+  increasingDate,
+  increasingPrice,
+  label,
+  setJourneys,
+  setTableData,
+  setIncreasingDate,
+  setIncreasingPrice
+) => {
   let sortedJourneys = journeys;
   if (label === "date") {
-
     sortedJourneys = journeys.sort((a, b) => {
       let aDate = new Date(a.departureDateTime);
       let bDate = new Date(b.departureDateTime);
-      if(increasingDate) {
+      if (increasingDate) {
         setIncreasingDate(false);
         return bDate - aDate;
       } else {
@@ -179,8 +194,8 @@ const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourn
     });
   } else if (label === "price") {
     sortedJourneys = journeys.sort((a, b) => {
-      if(a.price !== b.price) {
-        if(increasingPrice) {
+      if (a.price !== b.price) {
+        if (increasingPrice) {
           setIncreasingPrice(false);
           return b.price - a.price;
         }
@@ -189,45 +204,65 @@ const sortJourneys = (journeys, increasingDate, increasingPrice, label, setJourn
       }
       let aDate = new Date(a.departureDateTime);
       let bDate = new Date(b.departureDateTime);
-      setIncreasingPrice(!increasingPrice)
+      setIncreasingPrice(!increasingPrice);
       return aDate - bDate;
     });
   }
   setJourneys(sortedJourneys);
-  setTableData(sortedJourneys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>));
-}
+  setTableData(
+    sortedJourneys.map((journey) => (
+      <TableRow journey={journey} key={journey.journeyId.toString()} />
+    ))
+  );
+};
 
 const TableRow = (props) => {
-    let journey = props.journey;
-    let date = journey.departureDateTime.slice(5,7) + "/" + journey.departureDateTime.slice(8,10) + "/" + journey.departureDateTime.slice(2,4);
-    let time = journey.departureDateTime.slice(11,16).split(":");
-    let ampm = "AM";
-    if (parseInt(time[0]) > 12) {
-      time[0] = parseInt(time[0]) - 12;
-      ampm = "PM";
-    }
-    time = time.join(":") + " " + ampm;
-    // format journey.price to always have two decimal places
-    let price = `$${journey.price.toFixed(2)}`;
-    let url = new URL(Routes.tickets);
-    for(let param in defaultParameters) {
-      url.searchParams.append(param, defaultParameters[param]);
-    }
-    url.searchParams.append("originId", journey.origin.cityId);
-    url.searchParams.append("destinationId", journey.destination.cityId);
-    url.searchParams.append("departureDate", journey.departureDateTime.slice(0,10));
-    return (
-      <tr>
-        <td>{date}</td>
-        <td><a className="highlight" rel="noreferrer" href={url.toString()} target="_blank">Megabus</a></td>
-        <td>{journey.origin.cityName}</td>
-        <td>{journey.destination.cityName}</td>
-        <td>{time}</td>
-        <td className="highlight">{price}</td>
-      </tr>
-    )
-  
-}
+  let journey = props.journey;
+  let date =
+    journey.departureDateTime.slice(5, 7) +
+    "/" +
+    journey.departureDateTime.slice(8, 10) +
+    "/" +
+    journey.departureDateTime.slice(2, 4);
+  let time = journey.departureDateTime.slice(11, 16).split(":");
+  let ampm = "AM";
+  if (parseInt(time[0]) > 12) {
+    time[0] = parseInt(time[0]) - 12;
+    ampm = "PM";
+  }
+  time = time.join(":") + " " + ampm;
+  // format journey.price to always have two decimal places
+  let price = `$${journey.price.toFixed(2)}`;
+  let url = new URL(Routes.tickets);
+  for (let param in defaultParameters) {
+    url.searchParams.append(param, defaultParameters[param]);
+  }
+  url.searchParams.append("originId", journey.origin.cityId);
+  url.searchParams.append("destinationId", journey.destination.cityId);
+  url.searchParams.append(
+    "departureDate",
+    journey.departureDateTime.slice(0, 10)
+  );
+  return (
+    <tr>
+      <td>{date}</td>
+      <td>
+        <a
+          className="highlight"
+          rel="noreferrer"
+          href={url.toString()}
+          target="_blank"
+        >
+          Megabus
+        </a>
+      </td>
+      <td>{journey.origin.cityName}</td>
+      <td>{journey.destination.cityName}</td>
+      <td>{time}</td>
+      <td className="highlight">{price}</td>
+    </tr>
+  );
+};
 
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
@@ -239,13 +274,19 @@ const Scraper = () => {
   const [journeys, setJourneys] = useState(null);
   const [increasingDate, setIncreasingDate] = useState(true);
   const [increasingPrice, setIncreasingPrice] = useState(false);
-  const [tableData, setTableData] = useState(journeys ? journeys.map((journey) => <TableRow journey={journey} key={journey.journeyId.toString()}/>) : []);
+  const [tableData, setTableData] = useState(
+    journeys
+      ? journeys.map((journey) => (
+          <TableRow journey={journey} key={journey.journeyId.toString()} />
+        ))
+      : ""
+  );
   const [errors, setErrors] = useState({});
   const originCities = [];
   for (let city in cities) {
     originCities.push({ value: cities[city], label: city });
   }
-  
+
   return (
     <div>
       <div className="upper-scraper">
@@ -255,7 +296,17 @@ const Scraper = () => {
         <div className="form">
           <form
             onSubmit={(e) =>
-              getTickets(e, originCity, destinationCity, firstDate, secondDate, setJourneys, setTableData, errors, setErrors)
+              getTickets(
+                e,
+                originCity,
+                destinationCity,
+                firstDate,
+                secondDate,
+                setJourneys,
+                setTableData,
+                errors,
+                setErrors
+              )
             }
           >
             <div className="top-layer">
@@ -299,7 +350,9 @@ const Scraper = () => {
                     components={{ DropdownIndicator: () => null }}
                   />
                 </div>
-                {errors.originCity && <span className="error">{errors.originCity}</span>}
+                {errors.originCity && (
+                  <span className="error">{errors.originCity}</span>
+                )}
               </div>
               <div className="field">
                 <div>
@@ -366,12 +419,9 @@ const Scraper = () => {
                       required
                     />
                   </div>
-                  {
-                  
-                  errors.secondDate && (
+                  {errors.secondDate && (
                     <span className="error">{errors.secondDate}</span>
-                  )
-                }
+                  )}
                 </div>
               ) : (
                 <></>
@@ -385,31 +435,83 @@ const Scraper = () => {
           </form>
         </div>
       </div>
-      {journeys ? ( 
-      <div className="lower-scraper">
-        <div className="instructions">
-          <div className="instruction">
-
-          Select the bus ticket to book your ride
-          </div>
-          <div className="instruction">
-            Click the <span className="highlight">arrows</span> to sort your results
-          </div>
+      {tableData === "loading" ? (
+        <div className="loading-container">
+          <div className="loader"></div>
+          <div>Finding your tickets!</div>
         </div>
-        <div className="table">
-          <table>
-            <tr className="header">
-                <th><span className="sortable" onClick={() => sortJourneys(journeys, increasingDate, increasingPrice, "date", setJourneys, setTableData, setIncreasingDate, setIncreasingPrice)}>Date <img src={sortingArrows} alt="Arrows to sort table"></img></span></th>
+      ) : tableData === "" ? (
+        <></>
+      ) : tableData.length === 0 ? (
+        <div className="loading-container">
+          No tickets found {":("} <br />
+          Try using a range of dates to get the best functionality, or try to
+          make the range bigger!{" "}
+        </div>
+      ) : (
+        <div className="lower-scraper">
+          <div className="instructions">
+            <div className="instruction">
+              Select the bus ticket to book your ride
+            </div>
+            <div className="instruction">
+              Click the <span className="highlight">arrows</span> to sort your
+              results
+            </div>
+          </div>
+          <div className="table">
+            <table>
+              <tr className="header">
+                <th>
+                  <span
+                    className="sortable"
+                    onClick={() =>
+                      sortJourneys(
+                        journeys,
+                        increasingDate,
+                        increasingPrice,
+                        "date",
+                        setJourneys,
+                        setTableData,
+                        setIncreasingDate,
+                        setIncreasingPrice
+                      )
+                    }
+                  >
+                    Date{" "}
+                    <img src={sortingArrows} alt="Arrows to sort table"></img>
+                  </span>
+                </th>
                 <th>Bus Ticket</th>
                 <th>From</th>
                 <th>To</th>
                 <th>Time</th>
-                <th><span className="sortable" onClick={() => sortJourneys(journeys,increasingDate, increasingPrice ,"price", setJourneys, setTableData, setIncreasingDate, setIncreasingPrice)}>Price <img src={sortingArrows} alt="Arrows to sort table"></img></span></th>
-            </tr>
-            {tableData}
-          </table>        
+                <th>
+                  <span
+                    className="sortable"
+                    onClick={() =>
+                      sortJourneys(
+                        journeys,
+                        increasingDate,
+                        increasingPrice,
+                        "price",
+                        setJourneys,
+                        setTableData,
+                        setIncreasingDate,
+                        setIncreasingPrice
+                      )
+                    }
+                  >
+                    Price{" "}
+                    <img src={sortingArrows} alt="Arrows to sort table"></img>
+                  </span>
+                </th>
+              </tr>
+              {tableData}
+            </table>
+          </div>
         </div>
-      </div>) : <></> }
+      )}
     </div>
   );
 };
