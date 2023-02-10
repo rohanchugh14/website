@@ -31,6 +31,7 @@ const getDestinationCities = (originId, setDestinationCities) => {
   };
   console.log("getting destination cities");
   console.log("originId: " + originId);
+  console.log("proxy url" + Routes.proxy)
   axios.post(Routes.proxy, data, { params }).then((res) => {
     // get all destination cities and metadata
     let cities = res.data.cities;
