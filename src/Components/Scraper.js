@@ -340,10 +340,10 @@ const Scraper = () => {
                 </div>
                 <div>
                   <ReactSelect
-                    components={{
-                      Option: CustomOption,
-                      DropdownIndicator: () => null,
-                    }}
+                  onBlur={event => event.preventDefault()}
+                  components={{
+                    DropdownIndicator: () => null
+                  }}
                     className="select"
                     classNamePrefix={"select"}
                     placeholder="Enter a city..."
@@ -351,7 +351,6 @@ const Scraper = () => {
                     options={originCities}
                     required
                     unstyled
-                    // optionClassName="needsclick"
                     onChange={(opt) => {
                       setOriginCity(opt.value);
                       setDestinationCity(-1);
@@ -374,6 +373,7 @@ const Scraper = () => {
                     // signal to re-render when origin city changes and deselect
                     // destination city
                     key={originCity}
+                    onBlur={event => event.preventDefault()}
                     className="select"
                     classNamePrefix={"select"}
                     isSearchable
@@ -393,10 +393,8 @@ const Scraper = () => {
                     placeholder="Enter a city..."
                     unstyled
                     components={{
-                      Option: CustomOption,
-                      DropdownIndicator: () => null,
+                      DropdownIndicator: () => null
                     }}
-                    optionClassName="needsclick"
 
                   />
                 </div>
