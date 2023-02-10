@@ -82,6 +82,7 @@ const getTickets = async (
   errors,
   setErrors
 ) => {
+  console.log("testing get tickets");
   e.preventDefault();
   let errorsPresent = false;
   let currErrors = errors;
