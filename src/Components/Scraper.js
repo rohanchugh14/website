@@ -14,7 +14,7 @@ import { useState } from "react";
 
 // Components
 import DatePicker from "react-datepicker";
-import Select from "react-select";
+import ReactSelect, { components } from "react-select";
 
 // CSS
 import "react-datepicker/dist/react-datepicker.css";
@@ -264,6 +264,11 @@ const TableRow = (props) => {
   );
 };
 
+// fix bug on mobile where clicking a menu item does not call onChange handler
+const CustomOption = (props) => (
+  <components.Option className="needsclick" {...props} />
+);
+
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
   const [dateType, setDateType] = useState("single");
@@ -334,7 +339,11 @@ const Scraper = () => {
                   <label htmlFor="origin">From</label>
                 </div>
                 <div>
-                  <Select
+                  <ReactSelect
+                    components={{
+                      Option: CustomOption,
+                      DropdownIndicator: () => null,
+                    }}
                     className="select"
                     classNamePrefix={"select"}
                     placeholder="Enter a city..."
@@ -342,13 +351,14 @@ const Scraper = () => {
                     options={originCities}
                     required
                     unstyled
-                    optionClassName="needsclick"
+                    // optionClassName="needsclick"
                     onChange={(opt) => {
                       setOriginCity(opt.value);
+                      setDestinationCity(-1);
                       setErrors({ ...errors, originCity: "" });
                       getDestinationCities(opt.value, setDestinationCities);
                     }}
-                    components={{ DropdownIndicator: () => null }}
+                    // components={{ DropdownIndicator: () => null }}
                   />
                 </div>
                 {errors.originCity && (
@@ -360,7 +370,7 @@ const Scraper = () => {
                   <label htmlFor="destination">To</label>
                 </div>
                 <div>
-                  <Select
+                  <ReactSelect
                     // signal to re-render when origin city changes and deselect
                     // destination city
                     key={originCity}
@@ -445,7 +455,8 @@ const Scraper = () => {
         <></>
       ) : tableData.length === 0 ? (
         <div className="loading-container">
-          No tickets found {":("} <br />
+          No tickets found {":("}
+          <br />
           Try using a range of dates to get the best functionality, or try to
           make the range bigger!{" "}
         </div>
