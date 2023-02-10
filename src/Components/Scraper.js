@@ -396,6 +396,8 @@ const Scraper = () => {
                       Option: CustomOption,
                       DropdownIndicator: () => null,
                     }}
+                    optionClassName="needsclick"
+
                   />
                 </div>
                 {errors.destinationCity && (
