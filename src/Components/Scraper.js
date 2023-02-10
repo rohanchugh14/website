@@ -351,6 +351,9 @@ const Scraper = () => {
                     required
                     unstyled
                     onChange={(opt) => {
+                      console.log("changing first one");
+                      console.log("opt: ", opt);
+                      console.log("opt.value: ", opt.value);
                       setOriginCity(opt.value);
                       setDestinationCity(-1);
                       setErrors({ ...errors, originCity: "" });
