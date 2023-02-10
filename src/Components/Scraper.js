@@ -392,7 +392,10 @@ const Scraper = () => {
                     required
                     placeholder="Enter a city..."
                     unstyled
-                    components={{ DropdownIndicator: () => null }}
+                    components={{
+                      Option: CustomOption,
+                      DropdownIndicator: () => null,
+                    }}
                   />
                 </div>
                 {errors.destinationCity && (
