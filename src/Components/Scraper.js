@@ -265,9 +265,7 @@ const TableRow = (props) => {
 };
 
 // fix bug on mobile where clicking a menu item does not call onChange handler
-const CustomOption = (props) => (
-  <components.Option className="needsclick" {...props} />
-);
+
 
 const Scraper = () => {
   const [destinationCities, setDestinationCities] = useState([]);
