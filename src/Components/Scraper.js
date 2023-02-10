@@ -342,6 +342,7 @@ const Scraper = () => {
                     options={originCities}
                     required
                     unstyled
+                    optionClassName="needsclick"
                     onChange={(opt) => {
                       setOriginCity(opt.value);
                       setErrors({ ...errors, originCity: "" });

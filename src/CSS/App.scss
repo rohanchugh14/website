@@ -105,7 +105,7 @@ input {
     font-size: 1.5vw;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
+    // line-height: 20px;
     // margin-top: 0.5vw;
     font-family: "Akshar";
 }
@@ -116,10 +116,15 @@ input {
     font-weight: 300;
     font-size: 1.2vw;
     margin-left: 0.5vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .upper-scraper .form .top-layer .radio-buttons input[type='radio'] {
     accent-color: $ticket_scraper_green;
+    // width: 10vw;
 }
 
 .upper-scraper .form .top-layer .radio-buttons label {
@@ -136,13 +141,14 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    flex-wrap: wrap;
     margin-bottom: 0.5vw;
     width: 100%;
 }
 .upper-scraper .form .main .field {
-    width: 23.5%;
+    flex: 23.5%;
     margin-right: 2%;
-    // margin: auto;
+    font-size: 1.2vw;
 }
 
 .upper-scraper .form .main .date {
@@ -154,7 +160,7 @@ input {
 
 .upper-scraper .form .main .error {
     color: red;
-    font-size: 1.2vw;
+    // font-size: 1.2vw;
     font-family: 'Assistant', sans-serif;
     font-style: normal;
     font-weight: 300;
@@ -169,7 +175,7 @@ input {
     font-family: 'Assistant', sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 1.2vw;
+    // font-size: 1.2vw;
 
 }
 
@@ -190,18 +196,7 @@ input {
 }
 
 
-// .upper-scraper .form .main .select {
-//     font-family: 'Assistant', sans-serif;
-//     font-style: normal;
-//     font-weight: 300;
-//     font-size: 1.2vw;
-//     border-width: 0px;
-//     border: 2px solid $ticket_scraper_green;
-//     border-radius: 5px;
-//     padding: 0.25vw;
-//     width: 100%;
-//     background-color: white;
-// }
+
 
 .select__control {
     min-height: unset !important;
@@ -343,21 +338,14 @@ input {
     font-family: 'Assistant';
     font-style: normal;
     border-spacing: 0;
-    // vertical-align: middle;
     
 }
 
-.lower-scraper .table tr {
-    // padding-top: 3vw;
-    // padding-bottom: 3vw;
-    // vertical-align: middle;
-    
-}
+
 
 .lower-scraper .table td {
     border-bottom: 3px solid $ticket_scraper_grey;
     padding: 0.5vw 0 0.5vw 0;
-    // vertical-align: middle;
 }
 
 .lower-scraper .table img {
@@ -375,18 +363,12 @@ input {
 
 .lower-scraper .table .sortable:hover {
     color: $ticket_scraper_blue;
-    // background-color: $ticket_scraper_light_blue;
     cursor: pointer;
     -webkit-transition: color 0.25s linear;
     -moz-transition: color 0.25s linear;
     transition: color 0.25s linear;
-    // -webkit-transition: background-color 0.25s linear;
-    // -moz-transition: background-color 0.25s linear;
-    // transition: background-color 0.25s linear;
 }
 
-// .lower-scraper .table tr.header th {
-// }
 .loading-container {
     display:flex;
     flex-direction: column;
@@ -421,3 +403,53 @@ input {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  @media (max-width: 768px) {
+    .upper-scraper .form {
+        padding: 3vw;
+    }
+    .upper-scraper .form .main .field {
+        flex: 100%;
+        // margin-right: 0;
+        font-size: 2vw;
+        margin-bottom: 1vw;
+    }
+    .upper-scraper .form .main input, .select {
+        font-size: 2vw;
+    }
+
+    .upper-scraper .form .top-layer .label {
+        font-size: 2.5vw;
+    }
+
+    .upper-scraper .form .top-layer .radio-buttons label {
+        font-size: 2.5vw;
+    }
+
+    #optionalSecondDate {
+        margin-bottom: 0;
+    }
+
+    .upper-scraper .form .submit button {
+        font-size: 4vw;
+        padding: 1vw;
+    }
+    .loader {
+        margin-bottom: 3vw;
+    }
+    .loading-container {
+        font-size: 4vw;
+    }
+
+    .lower-scraper table {
+        font-size: 2vw;
+    }
+
+    .lower-scraper .table th {
+        font-size: 2.3vw;
+    }
+
+    .lower-scraper .instructions .instruction {
+        font-size: 2vw;
+    }
+}
