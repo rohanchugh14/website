@@ -14,7 +14,7 @@ import { useState } from "react";
 
 // Components
 import DatePicker from "react-datepicker";
-import ReactSelect, { components } from "react-select";
+import ReactSelect from "react-select";
 
 // CSS
 import "react-datepicker/dist/react-datepicker.css";
