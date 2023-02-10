@@ -1,6 +1,6 @@
 const CONSTANTS = {
     megabusAPI: "https://us.megabus.com/journey-planner/api",
-    host: process.env.HOST || "http://localhost:3001",
+    host: "https://website-backend-production-cabd.up.railway.app",
     megabusTickets: "https://us.megabus.com/journey-planner",
 }
 const Routes = {
