@@ -60,24 +60,29 @@ input {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    // margin-top: 2vw;
     background-color: $ticket_scraper_blue;
     animation-name: fadeIn;
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
     animation-duration: 1.2s;
-    // margin-bottom: 2vw; 
 }
+
+
+
 
 .upper-scraper > .label {
     color: white;
-    // font-size: 1.5vw;
     font-size: 2.5vw;
     font-style: normal;
     font-weight: 400;
     margin-top: 7vw;
     font-family: "Akshar";
+
+}
+
+.underline {
     border-bottom: 8px solid $ticket_scraper_green;
+
 }
 
 .upper-scraper .form {
@@ -105,8 +110,6 @@ input {
     font-size: 1.5vw;
     font-style: normal;
     font-weight: 400;
-    // line-height: 20px;
-    // margin-top: 0.5vw;
     font-family: "Akshar";
 }
 
@@ -124,7 +127,6 @@ input {
 
 .upper-scraper .form .top-layer .radio-buttons input[type='radio'] {
     accent-color: $ticket_scraper_green;
-    // width: 10vw;
 }
 
 .upper-scraper .form .top-layer .radio-buttons label {
@@ -160,12 +162,10 @@ input {
 
 .upper-scraper .form .main .error {
     color: red;
-    // font-size: 1.2vw;
     font-family: 'Assistant', sans-serif;
     font-style: normal;
     font-weight: 300;
     margin-top: 0.25vw;
-    // margin-bottom: 0.5vw;
 }
 
 #optionalSecondDate {
@@ -175,7 +175,6 @@ input {
     font-family: 'Assistant', sans-serif;
     font-style: normal;
     font-weight: 400;
-    // font-size: 1.2vw;
 
 }
 
@@ -405,30 +404,39 @@ input {
   }
 
   @media (max-width: 768px) {
+    .upper-scraper > .label {
+        font-size: 6vw;
+        text-align: center;
+        margin-bottom: 4vw;
+
+    }
+
+    .underline {
+        border-bottom: 0px solid $ticket_scraper_green;
+    }
     .upper-scraper .form {
         padding: 3vw;
+        width: 90vw;
     }
     .upper-scraper .form .main .field {
         flex: 100%;
-        // margin-right: 0;
-        font-size: 3vw;
+        margin-right: 0;
+        font-size: 5vw;
         margin-bottom: 1vw;
     }
     .upper-scraper .form .main input, .select {
-        font-size: 3vw;
+        font-size: 5vw;
     }
 
     .upper-scraper .form .top-layer .label {
-        font-size: 3.75vw;
+        font-size: 5vw;
     }
 
     .upper-scraper .form .top-layer .radio-buttons label {
-        font-size: 3.75vw;
+        font-size: 5vw;
     }
 
-    #optionalSecondDate {
-        margin-bottom: 0;
-    }
+    
 
     .upper-scraper .form .submit button {
         font-size: 6vw;

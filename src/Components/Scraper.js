@@ -294,7 +294,7 @@ const Scraper = () => {
     <div>
       <div className="upper-scraper">
         <div className="label">
-          Enter the information below to find the cheapest bus ticket
+          <span className="underline">Enter the information below to find the cheapest bus ticket</span>
         </div>
         <div className="form">
           <form
