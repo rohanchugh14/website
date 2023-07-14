@@ -11,16 +11,18 @@ export const onChange = (e, setFile, setFileName, setValid, setProbabilities, se
     if (e.target.files[0]) {
       const rawFile = e.target.files[0];
       const name = rawFile.name;
+      console.log(name);
       setFileName(name);
       const extension = name.split(".").pop().toLowerCase();
+      console.log(extension);
       if (extension === "qasm") {
         setValid(true);
         //make sure file extension is QASM
         fr.readAsText(e.target.files[0]);
         fr.onloadend = () => {
           //separate the file into each line, removing any blank lines
-          const lines = fr.result.split("\n").filter((line) => line.length > 0);
-          if (lines[0] !== "OPENQASM 2.0;") {
+          const lines = fr.result.split("\n").filter((line) => line.trim().length > 0);
+          if (lines[0].trim() !== "OPENQASM 2.0;") {
             setValid(false);
             return;
           }
@@ -31,11 +33,13 @@ export const onChange = (e, setFile, setFileName, setValid, setProbabilities, se
         setValid(false);
       }
     } else {
+      console.log("file is null");
       setFile(null);
     }
   };
   const run = (lines, setProbabilities, setSimpleQuantumState, setExpandedQuantumState, setNumQubits) => {
     let [qubits, numQubits, currIndex] = initialize(lines);
+    console.log(qubits, numQubits, currIndex);
     setNumQubits(numQubits);
     qubits = prepareQubits(qubits, lines, currIndex);
     let [probabilities, sQState, eQState] = measureQubits(qubits, numQubits);
@@ -66,6 +70,7 @@ export const onChange = (e, setFile, setFileName, setValid, setProbabilities, se
         continue;
       }
       let index = getQubitNum(lines[currIndex]);
+      console.log(index);
       qubits[index].applyGate(lines[currIndex]);
       currIndex++;
     }

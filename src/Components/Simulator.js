@@ -16,9 +16,6 @@ const Simulator = () => {
   const [simpleQuantumState, setSimpleQuantumState] = useState("");
   const [expandedQuantumState, setExpandedQuantumState] = useState("");
 
-  
-  
-  
   return (
     <div className="yellow-bg">
       <Card border="light" className="bg-white shadow-sm mb-4">
@@ -56,7 +53,7 @@ const Simulator = () => {
                     {latexStrings ? (
                       latexStrings.map((el) => (
                         <h3>
-                          <Latex>{el}</Latex>
+                          <Latex key={el}>{el}</Latex>
                         </h3>
                       ))
                     ) : (

@@ -22,6 +22,8 @@ export const getGate = (line) => {
 };
 
 export const getQubitNum = (line) => {
+    console.log(line);
+    console.log(line.substring(line.indexOf("[") + 1));
     return parseInt(line.substring(line.indexOf("[") + 1));
 }
 
