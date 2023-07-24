@@ -2,23 +2,34 @@
 
 .upper-header {
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+}
+
+.side {
+  flex: 1;
+  height: 100%;
+  margin-left: 1vw;
+  margin-top: 1vw;
 }
 
 .large-screen-header {
     display: none;
 }
 
-.rc-logo {
-  justify-content: center;
+.rc-logo-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 2vw;
 }
+
+
 
 @media (min-width: 576px) {
     .large-screen-header {
         display: block;
     }
-    .rc-logo {
-      justify-content: end;
-    }
+    // .rc-logo {
+    //   justify-content: end;
+    // }
 }
+
+

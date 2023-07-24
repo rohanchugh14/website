@@ -1,0 +1,18 @@
+@import "./variables";
+
+.custom-navbar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-family: 'Gafata', sans-serif;
+}
+
+.custom-nav > * {
+  margin: 0 1vw;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: $home-light-orange !important;
+}
+

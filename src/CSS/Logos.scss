@@ -5,3 +5,28 @@ Image {
   margin-right: 1.5vw;
   display: none;
 }
+
+
+$animation-duration: 0.5s;
+$animation-easing: ease-in-out;
+
+@for $i from 1 through 3 {
+  .btn-link:nth-child(#{$i}) {
+    transition: transform 0.3s $animation-easing;
+    &:hover {
+      transform: scale(1.2);
+      animation: bounce#{$i} $animation-duration $animation-easing 1;
+    }
+  }
+}
+
+@for $i from 1 through 3 {
+  @keyframes bounce#{$i} {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.1); }
+    40% { transform: scale(1.2); }
+    60% { transform: scale(1.15); }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+}

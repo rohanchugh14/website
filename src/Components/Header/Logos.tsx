@@ -1,43 +1,41 @@
 import React from "react";
 import { Button, Image } from "react-bootstrap";
 import "../../CSS/Logos.scss";
-const Logos = () => {
+type Props = {
+  className?: string;
+}
+const Logos: React.FC<Props> = ({className}) => {
   return (
-    <div>
+    <div className={className}>
       <Button
         as="a"
-        href="https://www.google.com/"
-        target="_blank"
+        href="mailto:rohanchugh14@gmail.com"
         variant="link"
-        rel="noopener noreferrer"
       >
         <Image
           src="/img/email-logo.svg"
-          style={{marginTop: "1vw" }}
         />
       </Button>
       <Button
         as="a"
-        href="https://www.google.com/"
+        href="https://www.github.com/rohanchugh14"
         target="_blank"
         variant="link"
         rel="noopener noreferrer"
       >
         <Image
           src="/img/github-logo.svg"
-          style={{marginTop: "1vw" }}
         />
       </Button>
       <Button
         as="a"
-        href="https://www.google.com/"
+        href="https://www.linkedin.com/in/rohanchugh"
         target="_blank"
         variant="link"
         rel="noopener noreferrer"
       >
         <Image
           src="/img/linkedin-logo.svg"
-          style={{marginTop: "1vw" }}
         />
       </Button>
     </div>

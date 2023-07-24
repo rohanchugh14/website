@@ -65,7 +65,7 @@ input {
     justify-content: center;
     align-items: center;
     // margin-top: 2vw;
-    background-color: $ticket_scraper_blue;
+    background-color: $ticket-scraper-blue;
     animation-name: fadeIn;
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
@@ -81,12 +81,12 @@ input {
     font-weight: 400;
     margin-top: 7vw;
     font-family: "Akshar";
-    border-bottom: 8px solid $ticket_scraper_green;
+    border-bottom: 8px solid $ticket-scraper-green;
 }
 
 .upper-scraper .form {
     background: white;
-    border: 3px solid $ticket_scraper_green;
+    border: 3px solid $ticket-scraper-green;
     border-radius: 25px;
     width: 75vw;
     display: flex;
@@ -105,7 +105,7 @@ input {
     margin-bottom: 0.5vw;
 }
 .upper-scraper .form .top-layer .label {
-    color: $ticket_scraper_green;
+    color: $ticket-scraper-green;
     font-size: 1.5vw;
     font-style: normal;
     font-weight: 400;
@@ -127,14 +127,14 @@ input {
 }
 
 .upper-scraper .form .top-layer .radio-buttons input[type='radio'] {
-    accent-color: $ticket_scraper_green;
+    accent-color: $ticket-scraper-green;
     // width: 10vw;
 }
 
 .upper-scraper .form .top-layer .radio-buttons label {
     margin-right: 0.5vw;
     margin-left: 0.25vw;
-    color: $ticket_scraper_grey;
+    color: $ticket-scraper-grey;
 }
 
 .upper-scraper .form .top-layer .radio-buttons input[type="radio"]:checked+label {
@@ -188,7 +188,7 @@ input {
     font-style: normal;
     font-weight: 300;
     font-size: 1.2vw;
-    border: 2px solid $ticket_scraper_green;
+    border: 2px solid $ticket-scraper-green;
     border-radius: 5px;
     padding: 0.5vw;
     width: 100%;
@@ -257,7 +257,7 @@ input {
     -ms-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background-color: $ticket_scraper_light_blue;
+    background-color: $ticket-scraper-light-blue;
     color: inherit;
     padding: 8px 12px;
     box-sizing: border-box;
@@ -291,7 +291,7 @@ input {
     font-style: normal;
     font-weight: 400;
     font-size: 1.5vw;
-    background-color: $ticket_scraper_blue;
+    background-color: $ticket-scraper-blue;
     color: white;
     border-radius: 5px;
     border: none;
@@ -300,7 +300,7 @@ input {
 }
 
 .upper-scraper .form .submit button:hover {
-    background-color: $ticket_scraper_darker_blue;
+    background-color: $ticket-scraper-darker-blue;
     cursor: pointer;
     -webkit-transition: background-color 0.25s linear;
     -moz-transition: background-color 0.25s linear;
@@ -327,11 +327,11 @@ input {
     font-style: normal;
     font-weight: 400;
     font-size: 1.2vw;
-    color: $ticket_scraper_grey
+    color: $ticket-scraper-grey
 }
 
 .lower-scraper .highlight {
-    color: $ticket_scraper_green;
+    color: $ticket-scraper-green;
 }
 
 .lower-scraper table {
@@ -348,7 +348,7 @@ input {
 
 
 .lower-scraper .table td {
-    border-bottom: 3px solid $ticket_scraper_grey;
+    border-bottom: 3px solid $ticket-scraper-grey;
     padding: 0.5vw 0 0.5vw 0;
 }
 
@@ -356,7 +356,7 @@ input {
     height: 1.1vw;
 }
 .lower-scraper .table th {
-    border-bottom: 3px solid $ticket_scraper_blue;
+    border-bottom: 3px solid $ticket-scraper-blue;
     text-align: left;
     font-size: 1.4vw;
     
@@ -366,7 +366,7 @@ input {
 }
 
 .lower-scraper .table .sortable:hover {
-    color: $ticket_scraper_blue;
+    color: $ticket-scraper-blue;
     cursor: pointer;
     -webkit-transition: color 0.25s linear;
     -moz-transition: color 0.25s linear;
