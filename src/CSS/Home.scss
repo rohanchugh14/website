@@ -1,0 +1,12 @@
+@import "./variables";
+body {
+  background-color: $home-light-yellow;
+}
+
+.title {
+  font-family: 'Niagara Solid';
+  font-size: 25vw;
+  color: $home-dark-orange;
+  text-align: center;
+  margin-top: 5vw;
+}
