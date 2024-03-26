@@ -1,4 +1,3 @@
-// import { Card } from "@themesberg/react-bootstrap";
 import React from "react";
 // import Navbar from "./Navbar";
 import "../CSS/App.scss";
