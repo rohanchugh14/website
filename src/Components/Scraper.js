@@ -287,7 +287,9 @@ const Scraper = () => {
   const [errors, setErrors] = useState({});
   const originCities = [];
   for (let city in cities) {
+    if (cities[city] !== -1) {
     originCities.push({ value: cities[city], label: city });
+    }
   }
 
   return (
